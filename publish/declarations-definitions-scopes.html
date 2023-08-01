@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2023-01-01" />
+  <meta name="keywords" content="лекции, мфти, мещерин, мещерин
+илья, тех, техать, 1 курс" />
+  <title>С++</title>
+  <link rel="stylesheet" href="styles.css">
+<link href="prism-monokai.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+<!--<link rel="stylesheet" type="text/css" href="https://jsxgraph.org/distrib/jsxgraph.css" />
+ <script type="text/javascript" src="https://jsxgraph.org/distrib/jsxgraphcore.js"></script>-->
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">С++</h1>
+<p class="date">2023</p>
+</header>
+<details>
+<summary>Содержание</summary>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#объявления-определения-и-области-видимости"
+id="toc-объявления-определения-и-области-видимости">Объявления,
+определения и области видимости</a>
+<ul>
+<li><a href="#что-можно-объявлять-и-как-это-делать"
+id="toc-что-можно-объявлять-и-как-это-делать">Что можно объявлять и как
+это делать?</a></li>
+<li><a href="#в-чем-разница-между-объявлением-и-определением"
+id="toc-в-чем-разница-между-объявлением-и-определением">В чем разница
+между объявлением и определением?</a></li>
+<li><a href="#области-видимости" id="toc-области-видимости">Области
+видимости</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+<h1 id="объявления-определения-и-области-видимости">Объявления,
+определения и области видимости</h1>
+<hr />
+<p>Для компилятора программа - это последовательность инструкций.</p>
+<p><strong>Инструкция</strong> - это объявления (declarations <code class="language-cpp">int a = 5;</code>), выражения (expressions <code class="language-cpp">a + 5 * a;</code>) и управляющие конструкции (control
+statements <code class="language-cpp">if else for while</code>).</p>
+<p>Причем на верхнем уровне программы (вне функций) можно только
+объявлять, все остальные должно быть внутри функций.</p>
+<h3 id="что-можно-объявлять-и-как-это-делать">Что можно объявлять и как
+это делать?</h3>
+<ul>
+<li>Переменные - <code class="language-cpp">тип_переменной идентификатор [=инициализатор];</code> (в
+квадратных скобках необязательная часть, <strong>идентификатор</strong>
+- это уникальное для текущей области видимости название переменной,
+<strong>инициализатор</strong> - это начальное значение переменной)</li>
+<li>Функции - <code class="language-cpp">тип_возвращаемого_значения идентфикатор_функции(тип_аргумента_1 идентификатор_аргумента_1, ... , тип_аргумента_n идентификатор_аргумента_n);</code></li>
+<li>Структуры - <code class="language-cpp">struct индентификатор_структуры;</code></li>
+<li>Классы - <code class="language-cpp">class индентификатор_класса;</code></li>
+<li>Объединение - <code class="language-cpp">union индентификатор_объединения;</code></li>
+<li>Пространство имен - <code class="language-cpp">namespace индентификатор {};</code></li>
+<li>Алиасы - <code class="language-cpp">typedef короткое_название очень_очень_длинное_название</code>
+или <code class="language-cpp">using короткое_название очень_очень_длинное_название</code>.<br>
+Например: <code class="language-cpp">typedef vvi &lt;vector&gt;&lt;vector&lt;int&gt;&gt;</code>.</li>
+</ul>
+<p>Про все типы будет подробно рассказано позже.</p>
+<h2 id="в-чем-разница-между-объявлением-и-определением">В чем разница
+между объявлением и определением?</h2>
+<hr />
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+int f(int a, int b); // объявление функции
+
+int f(int a, int b) // определение функции
+{
+    return a + b;
+}
+
+int main()
+{
+    std::cout &lt;&lt; f(3, 4) &lt;&lt; &quot;\n&quot;;
+}
+</code></pre>
+<p>Объявлять одно и тоже можно сколько угодно раз, а определять нужно
+ровно один раз.</p>
+<h2 id="области-видимости">Области видимости</h2>
+<hr />
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+// глобальная область
+// можно только объявлять
+
+namespace N
+{
+    int x = 42;
+    // новая область видимости (все что внутри фигурных скобок)
+    // тут тоже можно только объявлять
+}
+
+class C
+{
+    // еще область видимости (все что внутри фигурных скобок)
+    // и снова можно только объявлять (?)
+};
+
+// опять глобальная
+
+int x = 5; // переменные объявленные в глобальной области - глобальные
+
+// и все еще глобальная
+
+int main()
+{
+    // только внутри функций можно писать другие инструкции, кроме объявлений
+
+    int x = 3; // не глобальные переменные - локальные
+    // локальные переменные доступны только в области видимости,
+    // в которой объявлены (в ближайших фигурных скобках)
+    // локальные переменные &#39;забивают&#39; глобальные,
+    // но есть способ получить доступ к глобальной переменной
+
+    std::cout &lt;&lt; ::x &lt;&lt; &quot;\n&quot;; // выведет 5
+
+    // можно получить доступ к переменной внутри namespace
+
+    std::cout &lt;&lt; N::x &lt;&lt; &quot;\n&quot;; // выведет 42
+
+    // std - это тоже namespace, в котором кучу всего объявлено (cin, cout)
+
+    // чтобы не писать каждый раз название namespace,
+    // можно в любом в любом месте программы написать:
+
+    // using namespace std;
+
+    // и тогда все объявленные в namespace имена будут доступны, как локальные переменные
+    // но могут возникать коллизии имен, поэтому так делать не стоит
+
+    // чтобы использовать какую-то конкретную вещь, можно написать
+    using std::cin;
+    // теперь дальше по коду можно использовать cin, вместо std::cin
+
+    {
+        // вложенная область видимости
+        int x = 4;
+        std::cout &lt;&lt; x &lt;&lt; &quot;\n&quot;; // выведет 4
+    }
+
+    std::cout &lt;&lt; x &lt;&lt; &quot;\n&quot;; // выведет 3
+
+    // в с++ существуют понятия:
+    // qualified-id (квалифицированный идентификатор), когда
+    // перед названием переменной что-то стоит ::x, N::x и т.д.
+
+    // unqualified-id (неквалифицированный идентификатор), иначе
+    
+
+}
+</code></pre>
+<script src="prism.js"></script>
+<script src="copy_code.js"></script>
+</body>
+</html>

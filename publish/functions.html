@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2023-01-01" />
+  <meta name="keywords" content="лекции, мфти, мещерин, мещерин
+илья, тех, техать, 1 курс" />
+  <title>С++</title>
+  <link rel="stylesheet" href="styles.css">
+<link href="prism-monokai.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+<!--<link rel="stylesheet" type="text/css" href="https://jsxgraph.org/distrib/jsxgraph.css" />
+ <script type="text/javascript" src="https://jsxgraph.org/distrib/jsxgraphcore.js"></script>-->
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">С++</h1>
+<p class="date">2023</p>
+</header>
+<details>
+<summary>Содержание</summary>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#функции" id="toc-функции">Функции</a>
+<ul>
+<li><a href="#перегрузка-функций-function-overloading"
+id="toc-перегрузка-функций-function-overloading">Перегрузка функций
+(function overloading)</a></li>
+<li><a
+href="#аргументы-по-умолчанию-и-функции-с-произвольным-числом-аргументов"
+id="toc-аргументы-по-умолчанию-и-функции-с-произвольным-числом-аргументов">Аргументы
+по умолчанию и функции с произвольным числом аргументов</a></li>
+<li><a href="#указатели-на-функции"
+id="toc-указатели-на-функции">Указатели на функции</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+<h1 id="функции">Функции</h1>
+<p>Это кусок кода, который можно выполнить в другом месте программы.</p>
+<h2 id="перегрузка-функций-function-overloading">Перегрузка функций
+(function overloading)</h2>
+<hr />
+<p>В C++ могут быть функции с одинаковым названием (идентификатором) и
+разными типами входных и выходных данных (и разным количеством входных
+аргументов). При вызове такой функции компилятор выбирает какую функцию
+запустить.</p>
+<p>Как он это делает? Написано в <a
+href="N4860.pdf#page=326">стандарте</a><a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> или
+<a
+href="https://en.cppreference.com/w/cpp/language/overload_resolution">на
+сайте</a>.</p>
+<p>Супер упрощенная схема выбора функции: <a href="#fn2"
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<ol type="1">
+<li>Точное соответствие. <a href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a>.</li>
+<li><a
+href="basic-types-and-supported-operations.html#приведение-типов">Floating
+point promotion или integer promotion</a>.</li>
+<li>Встроенные приведения типов. <a href="#fn4" class="footnote-ref"
+id="fnref4" role="doc-noteref"><sup>4</sup></a></li>
+<li>Определенные пользователем приведения типов. <a href="#fn5"
+class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a></li>
+</ol>
+<p>При выборе функции компилятор не смотрит на тип возвращаемого
+значения.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+int plus(int a, int b)
+{
+    return a + b;
+}
+
+std::string plus(std::string a, std::string b)
+{
+    return a + b;
+}
+
+int main()
+{
+    std::string s1 = &quot;no water in countryside &quot;;
+    std::string s2 = &quot;is awful\n&quot;;
+
+    int x = 9;
+    int y = 7;
+
+    std::cout &lt;&lt; plus(s1, s2); // С++ сам выберет какую функцию запустить
+    std::cout &lt;&lt; plus(x, y) &lt;&lt; &quot;\n&quot;;
+
+}</code></pre>
+<p>Правильно ли иметь несколько функций с одним названием в
+программе?</p>
+<p>Да, правильно, если они делают одно и тоже действие. Например, если
+нужна функция вычисляющая площадь фигуры, то хочется, чтобы она всегда
+называлась <code class="language-cpp">area</code>, вне зависимости от входных
+аргументов.</p>
+<h2
+id="аргументы-по-умолчанию-и-функции-с-произвольным-числом-аргументов">Аргументы
+по умолчанию и функции с произвольным числом аргументов</h2>
+<hr />
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+int f(int a, int b = 10) // аргументы по умолчанию только в конце
+{
+    return a + b;
+}
+
+int g(...) // функция с произвольным числом входных аргументов
+{
+    std::cout &lt;&lt; &quot;function with any number of args\n&quot;;
+}
+// как получить доступ к аргументам? почитать cppreference 🙃
+// но вообще использовать такие функции не стоит, так что не читайте
+// потом будут описаны нормальные способы создания
+// функции с произвольным количеством аргументов
+
+int main()
+{
+    std::cout &lt;&lt; f(7) &lt;&lt; &quot;\n&quot;; // выведет 17
+    std::cout &lt;&lt; f(7, 6) &lt;&lt; &quot;\n&quot;; // выведет 13
+}</code></pre>
+<h2 id="указатели-на-функции">Указатели на функции</h2>
+<hr />
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+void f(int cnt, char id)
+{
+    std::cout &lt;&lt; &quot;count of id: &quot; &lt;&lt; id &lt;&lt; &quot; is: &quot; &lt;&lt; cnt &lt;&lt; &quot;\n&quot;;
+}
+
+int main()
+{
+    void (*fp)(int, char) = &amp;f; // указатель на функцию
+
+    fp(4, &#39;a&#39;); // указатель можно вызывать, как обычную функцию
+
+    void (*fp_)(int, char) = f; 
+    // вообще писать амперсанд перед именем функции не обязательно
+}</code></pre>
+<p>Что вообще такое указатель на функцию?</p>
+<p>Это указатель в область памяти <a
+href="#pointers-and-types-of-memory#виды-памяти">text (в ней лежит код
+программы)</a>.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;algorithm&gt; // библиотека, в которой реализованы алгоритмы
+// в том числе функция sort
+
+bool cmp(int a, int b)
+{
+    return a &gt; b;
+}
+
+int main()
+{
+    int a[10] = {4, 5, 1, 6, 3, 3, 2, 0, 10, 7};
+
+    std::sort(a, a + 10); // в функцию sort надо передать
+    // указатель на начало диапазона
+    // и указатель на конец диапазона
+
+    // выведем массив, чтобы убедиться
+    for (int i = 0; i &lt; 10; ++i)
+    {
+        std::cout &lt;&lt; a[i] &lt;&lt; &quot; &quot;;
+    }
+    std::cout &lt;&lt; &quot;\n&quot;;
+
+    // но есть еще третий агрумент - функция сравнения
+
+    std::sort(a, a + 10, cmp);
+
+    // выведем массив, чтобы убедиться
+    for (int i = 0; i &lt; 10; ++i)
+    {
+        std::cout &lt;&lt; a[i] &lt;&lt; &quot; &quot;;
+    }
+    std::cout &lt;&lt; &quot;\n&quot;;
+
+}</code></pre>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Параграф overload resolution страница 326 в N4860.pdf<a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>На самом деле все гораздо сложнее и, если хочется все
+узнать, то можно почитать <a href="N4860.pdf#page=326">стандарт</a> или
+<a href="https://eel.is/c++draft/over.match">стандарт</a><a
+href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Когда типы аргументов и их количество тоно совпадает с
+поданными на вход<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Попытается сконвертировать <code class="language-cpp">int</code>
+в <code class="language-cpp">double</code>, <code class="language-cpp">char</code> в <code class="language-cpp">int</code> и т.д.<a href="#fnref4" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Как такое делать будет рассказано дальше.<a
+href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+<script src="prism.js"></script>
+<script src="copy_code.js"></script>
+</body>
+</html>

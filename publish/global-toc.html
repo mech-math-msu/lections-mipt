@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html lang="" xml:lang="" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8"/>
+<meta content="pandoc" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<meta content="2023-01-01" name="dcterms.date"/>
+<meta content="лекции, мфти, мещерин, мещерин
+илья, тех, техать, 1 курс" name="keywords"/>
+<title>С++</title>
+<link href="styles.css" rel="stylesheet"/>
+<link href="prism-monokai.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&amp;display=swap" rel="stylesheet"/>
+<!--<link rel="stylesheet" type="text/css" href="https://jsxgraph.org/distrib/jsxgraph.css" />
+ <script type="text/javascript" src="https://jsxgraph.org/distrib/jsxgraphcore.js"></script>-->
+<!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">С++</h1>
+<p class="date">2023</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<nav id="TOC_intro" role="doc-toc">
+<ul>
+<li><a href="intro.html#введение" id="toc-введение">Введение</a>
+<ul>
+<li><a href="intro.html#полезные-ссылки" id="toc-полезные-ссылки">Полезные
+ссылки</a></li>
+<li><a href="intro.html#книжки" id="toc-книжки">Книжки</a></li>
+<li><a href="intro.html#знакомство-с-компилятором-и-первая-программа" id="toc-знакомство-с-компилятором-и-первая-программа">Знакомство с
+компилятором и первая программа</a></li>
+</ul></li>
+</ul>
+</nav><nav id="TOC_errors" role="doc-toc">
+<ul>
+<li><a href="errors.html#ошибки" id="toc-ошибки">Ошибки</a>
+<ul>
+<li><a href="errors.html#ошибка-компиляции-ce-compilation-error" id="toc-ошибка-компиляции-ce-compilation-error">Ошибка компиляции (CE
+compilation error)</a>
+<ul>
+<li><a href="errors.html#примеры" id="toc-примеры">Примеры:</a></li>
+</ul></li>
+<li><a href="errors.html#ошибки-времени-выполнения-re-runtime-error" id="toc-ошибки-времени-выполнения-re-runtime-error">Ошибки времени
+выполнения (RE runtime error)</a></li>
+<li><a href="errors.html#неопределенное-поведение-ub-undefined-behavior" id="toc-неопределенное-поведение-ub-undefined-behavior">Неопределенное
+поведение (UB undefined behavior)</a></li>
+<li><a href="errors.html#неспецифицированное-поведение-unspecified-behavior" id="toc-неспецифицированное-поведение-unspecified-behavior">Неспецифицированное
+поведение (Unspecified behavior)</a></li>
+</ul></li>
+</ul>
+</nav><nav id="TOC_declarations-definitions-scopes" role="doc-toc">
+<ul>
+<li><a href="declarations-definitions-scopes.html#объявления-определения-и-области-видимости" id="toc-объявления-определения-и-области-видимости">Объявления,
+определения и области видимости</a>
+<ul>
+<li><a href="declarations-definitions-scopes.html#что-можно-объявлять-и-как-это-делать" id="toc-что-можно-объявлять-и-как-это-делать">Что можно объявлять и как
+это делать?</a></li>
+<li><a href="declarations-definitions-scopes.html#в-чем-разница-между-объявлением-и-определением" id="toc-в-чем-разница-между-объявлением-и-определением">В чем разница
+между объявлением и определением?</a></li>
+<li><a href="declarations-definitions-scopes.html#области-видимости" id="toc-области-видимости">Области
+видимости</a></li>
+</ul></li>
+</ul>
+</nav><nav id="TOC_basic-types-and-supported-operations" role="doc-toc">
+<ul>
+<li><a href="basic-types-and-supported-operations.html#основные-типы-данных-и-операции-с-ними" id="toc-основные-типы-данных-и-операции-с-ними">Основные типы данных и
+операции с ними</a>
+<ul>
+<li><a href="basic-types-and-supported-operations.html#основные-типы-данных-basic-types" id="toc-основные-типы-данных-basic-types">Основные типы данных (basic
+types)</a></li>
+<li><a href="basic-types-and-supported-operations.html#различные-способы-инициализации-базовых-типов" id="toc-различные-способы-инициализации-базовых-типов">Различные способы
+инициализации базовых типов</a></li>
+<li><a href="basic-types-and-supported-operations.html#операции-с-базовыми-типами" id="toc-операции-с-базовыми-типами">Операции с базовыми типами</a></li>
+<li><a href="basic-types-and-supported-operations.html#приведение-типов" id="toc-приведение-типов">Приведение
+типов</a>
+<ul>
+<li><a href="basic-types-and-supported-operations.html#неявное-приведение-типов" id="toc-неявное-приведение-типов">Неявное приведение типов</a></li>
+</ul></li>
+<li><a href="basic-types-and-supported-operations.html#базовые-контейнеры" id="toc-базовые-контейнеры">Базовые
+контейнеры</a>
+<ul>
+<li><a href="basic-types-and-supported-operations.html#string" id="toc-string">String</a></li>
+<li><a href="basic-types-and-supported-operations.html#vector-queue-и-stack" id="toc-vector-queue-и-stack">Vector, Queue и Stack</a></li>
+<li><a href="basic-types-and-supported-operations.html#set-и-map" id="toc-set-и-map">Set и Map</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav><nav id="TOC_control-statements" role="doc-toc">
+<ul>
+<li><a href="control-statements.html#управляющие-конструкции" id="toc-управляющие-конструкции">Управляющие конструкции</a>
+<ul>
+<li><a href="control-statements.html#условный-оператор-if-else" id="toc-условный-оператор-if-else">Условный оператор (if else)</a></li>
+<li><a href="control-statements.html#switch-case" id="toc-switch-case">Switch Case</a></li>
+<li><a href="control-statements.html#циклы" id="toc-циклы">Циклы</a></li>
+</ul></li>
+</ul>
+</nav><nav id="TOC_expressions-and-operators" role="doc-toc">
+<ul>
+<li><a href="expressions-and-operators.html#выражения-и-операторы" id="toc-выражения-и-операторы">Выражения и операторы</a>
+<ul>
+<li><a href="expressions-and-operators.html#операторы" id="toc-операторы">Операторы</a>
+<ul>
+<li><a href="expressions-and-operators.html#арифметические-операторы-arithmetic-operators" id="toc-арифметические-операторы-arithmetic-operators">Арифметические
+операторы (Arithmetic operators)</a></li>
+<li><a href="expressions-and-operators.html#битовые-операторы-bitwise-operators" id="toc-битовые-операторы-bitwise-operators">Битовые операторы (Bitwise
+operators)</a></li>
+<li><a href="expressions-and-operators.html#операторы-сравнения-comparison-operators" id="toc-операторы-сравнения-comparison-operators">Операторы сравнения
+(Comparison operators)</a></li>
+<li><a href="expressions-and-operators.html#логические-операторы-logical-operators" id="toc-логические-операторы-logical-operators">Логические операторы
+(Logical operators)</a></li>
+<li><a href="expressions-and-operators.html#инкремент-и-декремент-increment-and-decrement" id="toc-инкремент-и-декремент-increment-and-decrement">Инкремент и
+декремент (Increment and Decrement)</a></li>
+<li><a href="expressions-and-operators.html#присваивание-и-составное-присваивание-assignment-and-compound-assignment" id="toc-присваивание-и-составное-присваивание-assignment-and-compound-assignment">Присваивание
+и составное присваивание (Assignment and Compound assignment)</a></li>
+<li><a href="expressions-and-operators.html#оператор-sizeof" id="toc-оператор-sizeof">Оператор <code class="language-cpp">sizeof</code></a></li>
+<li><a href="expressions-and-operators.html#тернарный-оператор-ternary-operator" id="toc-тернарный-оператор-ternary-operator">Тернарный оператор (Ternary
+operator)</a></li>
+<li><a href="expressions-and-operators.html#оператор-запятая-operator-comma" id="toc-оператор-запятая-operator-comma">Оператор запятая (Operator
+comma)</a></li>
+</ul></li>
+<li><a href="expressions-and-operators.html#приоритет-операторов-operator-precedence-и-порядок-вычисления-order-of-evaluation" id="toc-приоритет-операторов-operator-precedence-и-порядок-вычисления-order-of-evaluation">Приоритет
+операторов (operator precedence) и порядок вычисления (order of
+evaluation)</a>
+<ul>
+<li><a href="expressions-and-operators.html#упражнение" id="toc-упражнение">Упражнение</a></li>
+</ul></li>
+<li><a href="expressions-and-operators.html#понятия-rvalue-и-lvalue" id="toc-понятия-rvalue-и-lvalue">Понятия rvalue и lvalue</a></li>
+</ul></li>
+</ul>
+</nav><nav id="TOC_pointers-and-types-of-memory" role="doc-toc">
+<ul>
+<li><a href="pointers-and-types-of-memory.html#указатели" id="toc-указатели">Указатели</a>
+<ul>
+<li><a href="pointers-and-types-of-memory.html#получение-адреса-и-разыменование" id="toc-получение-адреса-и-разыменование">Получение адреса и
+разыменование</a></li>
+<li><a href="pointers-and-types-of-memory.html#арифметические-операции-с-указателями" id="toc-арифметические-операции-с-указателями">Арифметические операции с
+указателями</a></li>
+<li><a href="pointers-and-types-of-memory.html#void-и-nullptr" id="toc-void-и-nullptr">void* и
+nullptr</a></li>
+</ul></li>
+<li><a href="pointers-and-types-of-memory.html#виды-памяти" id="toc-виды-памяти">Виды памяти</a>
+<ul>
+<li><a href="pointers-and-types-of-memory.html#оператор-new" id="toc-оператор-new">Оператор <code class="language-cpp">new</code></a></li>
+</ul></li>
+</ul>
+</nav><nav id="TOC_arrays" role="doc-toc">
+<ul>
+<li><a href="arrays.html#массивы" id="toc-массивы">Массивы</a></li>
+</ul>
+</nav><nav id="TOC_functions" role="doc-toc">
+<ul>
+<li><a href="functions.html#функции" id="toc-функции">Функции</a>
+<ul>
+<li><a href="functions.html#перегрузка-функций-function-overloading" id="toc-перегрузка-функций-function-overloading">Перегрузка функций
+(function overloading)</a></li>
+<li><a href="functions.html#аргументы-по-умолчанию-и-функции-с-произвольным-числом-аргументов" id="toc-аргументы-по-умолчанию-и-функции-с-произвольным-числом-аргументов">Аргументы
+по умолчанию и функции с произвольным числом аргументов</a></li>
+<li><a href="functions.html#указатели-на-функции" id="toc-указатели-на-функции">Указатели на функции</a></li>
+</ul></li>
+</ul>
+</nav><nav id="TOC_references" role="doc-toc">
+<ul>
+<li><a href="references.html#ссылки" id="toc-ссылки">Ссылки</a>
+<ul>
+<li><a href="references.html#самое-главное-что-нужно-знать-про-ссылки" id="toc-самое-главное-что-нужно-знать-про-ссылки">Самое главное, что
+нужно знать про ссылки</a></li>
+<li><a href="references.html#зачем-нужны-ссылки" id="toc-зачем-нужны-ссылки">Зачем
+нужны ссылки?</a></li>
+<li><a href="references.html#висячая-ссылка-dangling-reference" id="toc-висячая-ссылка-dangling-reference">Висячая ссылка (dangling
+reference)</a></li>
+</ul></li>
+</ul>
+</nav><nav id="TOC_constants" role="doc-toc">
+<ul>
+<li><a href="constants.html#константы" id="toc-константы">Константы</a></li>
+</ul>
+</nav><nav id="TOC_casts" role="doc-toc">
+<ul>
+<li><a href="casts.html#приведения-типов" id="toc-приведения-типов">Приведения
+типов</a>
+<ul>
+<li><a href="casts.html#static_cast" id="toc-static_cast">1. <code class="language-cpp">static_cast</code></a></li>
+<li><a href="casts.html#reinterpret_cast" id="toc-reinterpret_cast">2. <code class="language-cpp">reinterpret_cast</code></a></li>
+<li><a href="casts.html#const_cast" id="toc-const_cast">3. <code class="language-cpp">const_cast</code></a></li>
+<li><a href="casts.html#с-style-cast" id="toc-с-style-cast">4. С-style
+cast</a></li>
+</ul></li>
+</ul>
+</nav><nav id="TOC_oop-concepts-structs-and-classes-incapsulation" role="doc-toc">
+<ul>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#объектно-ориентированное-программирование" id="toc-объектно-ориентированное-программирование">Объектно-ориентированное
+программирование</a>
+<ul>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#классы-и-структуры" id="toc-классы-и-структуры">Классы и
+структуры</a>
+<ul>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#поля-и-методы" id="toc-поля-и-методы">Поля и
+методы</a></li>
+</ul></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#три-главных-принципа-ооп" id="toc-три-главных-принципа-ооп">Три главных принципа ООП</a>
+<ul>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#инкапсуляция" id="toc-инкапсуляция">Инкапсуляция</a></li>
+</ul></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#this-и-оператор--" id="toc-this-и-оператор--"><code class="language-cpp">this</code> и оператор <code class="language-cpp">-&gt;</code></a></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#конструкторы-и-деструкторы-constructors-and-destructors" id="toc-конструкторы-и-деструкторы-constructors-and-destructors">Конструкторы
+и деструкторы (constructors and destructors)</a>
+<ul>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#default-и-delete" id="toc-default-и-delete"><code class="language-cpp">default</code> и <code class="language-cpp">delete</code></a></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#конструктор-копирования" id="toc-конструктор-копирования">Конструктор копирования</a></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#делегирующие-конструкторы-delegating-constructors" id="toc-делегирующие-конструкторы-delegating-constructors">Делегирующие
+конструкторы (delegating constructors)</a></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#stdinitializer_list-конструктор-и-агрегатная-инициализация-aggregate-initialization" id="toc-stdinitializer_list-конструктор-и-агрегатная-инициализация-aggregate-initialization"><code class="language-cpp">std::initializer_list</code> конструктор и агрегатная
+инициализация (aggregate initialization)</a></li>
+</ul></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#оператор-присваивания-и-правило-трех-the-rule-of-three" id="toc-оператор-присваивания-и-правило-трех-the-rule-of-three">Оператор
+присваивания <code class="language-cpp">=</code> и правило трех (The Rule Of
+Three)</a>
+<ul>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#способ-определения-оператора-присваивания-коротко-но" id="toc-способ-определения-оператора-присваивания-коротко-но">Способ
+определения оператора присваивания: коротко, но 🤯</a></li>
+</ul></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#списки-инициализации-полей-класса-member-initializer-lists" id="toc-списки-инициализации-полей-класса-member-initializer-lists">Списки
+инициализации полей класса (Member initializer lists)</a></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#перегрузка-арифметических-операторов-у-собственных-типов-классы-структуры-arithmetic-operators-overloading" id="toc-перегрузка-арифметических-операторов-у-собственных-типов-классы-структуры-arithmetic-operators-overloading">Перегрузка
+арифметических операторов у собственных типов (классы, структуры)
+(arithmetic operators overloading)</a></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#константные-и-неконстантные-методы-перегрузка-квадратных-скобок" id="toc-константные-и-неконстантные-методы-перегрузка-квадратных-скобок">Константные
+и неконстантные методы, перегрузка квадратных скобок</a>
+<ul>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#перегрузка-квадратных-скобок" id="toc-перегрузка-квадратных-скобок">Перегрузка квадратных скобок <code class="language-cpp">[]</code></a></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#как-менять-поля-в-константном-методе-mutable" id="toc-как-менять-поля-в-константном-методе-mutable">Как менять поля в
+константном методе <code class="language-cpp">mutable</code></a></li>
+</ul></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#дружественные-методы-и-классы-перегрузка-ввода-и-вывода-в-поток" id="toc-дружественные-методы-и-классы-перегрузка-ввода-и-вывода-в-поток">Дружественные
+методы и классы, перегрузка ввода и вывода в поток </a>
+<ul>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#как-переопределять-ввод-и-вывод-в-поток" id="toc-как-переопределять-ввод-и-вывод-в-поток">Как переопределять ввод
+и вывод в поток</a></li>
+</ul></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#static-поля-и-методы" id="toc-static-поля-и-методы"><code class="language-cpp">static</code> поля и методы</a>
+<ul>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#singelton" id="toc-singelton">Singelton</a></li>
+</ul></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#перегрузка-приведения-типов-и-explicit" id="toc-перегрузка-приведения-типов-и-explicit">Перегрузка приведения
+типов и <code class="language-cpp">explicit</code></a></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#перегрузка-литеральных-суффиксов" id="toc-перегрузка-литеральных-суффиксов">Перегрузка литеральных
+суффиксов</a></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#перегрузка-круглых-скобок-function-call-overloading-and-comparators" id="toc-перегрузка-круглых-скобок-function-call-overloading-and-comparators">Перегрузка
+круглых скобок (Function call overloading and comparators)</a></li>
+<li><a href="oop-concepts-structs-and-classes-incapsulation.html#заключительные-слова-о-перегрузке-операторов" id="toc-заключительные-слова-о-перегрузке-операторов">Заключительные
+слова о перегрузке операторов</a></li>
+</ul></li>
+</ul>
+</nav><nav id="TOC_inheritance" role="doc-toc">
+<ul>
+<li><a href="inheritance.html#наследование" id="toc-наследование">Наследование</a>
+<ul>
+<li><a href="inheritance.html#private-public-и-protected-наследование" id="toc-private-public-и-protected-наследование"><code class="language-cpp">private</code>, <code class="language-cpp">public</code> и <code class="language-cpp">protected</code> наследование</a>
+<ul>
+<li><a href="inheritance.html#второе-и-последнее-отличие-классов-от-структур" id="toc-второе-и-последнее-отличие-классов-от-структур">Второе и
+последнее отличие классов от структур</a></li>
+</ul></li>
+<li><a href="inheritance.html#видимость-и-доступность" id="toc-видимость-и-доступность">Видимость и доступность </a></li>
+<li><a href="inheritance.html#порядок-вызова-конструкторов-и-деструкторов" id="toc-порядок-вызова-конструкторов-и-деструкторов">Порядок вызова
+конструкторов и деструкторов</a></li>
+<li><a href="inheritance.html#приведение-типов-между-родителями-и-наследниками" id="toc-приведение-типов-между-родителями-и-наследниками">Приведение
+типов между родителями и наследниками</a></li>
+</ul></li>
+</ul>
+</nav></ul>
+</nav>
+<script src="prism.js"></script>
+<script src="copy_code.js"></script>
+</body>
+</html>

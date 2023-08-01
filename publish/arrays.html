@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2023-01-01" />
+  <meta name="keywords" content="лекции, мфти, мещерин, мещерин
+илья, тех, техать, 1 курс" />
+  <title>С++</title>
+  <link rel="stylesheet" href="styles.css">
+<link href="prism-monokai.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+<!--<link rel="stylesheet" type="text/css" href="https://jsxgraph.org/distrib/jsxgraph.css" />
+ <script type="text/javascript" src="https://jsxgraph.org/distrib/jsxgraphcore.js"></script>-->
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">С++</h1>
+<p class="date">2023</p>
+</header>
+<details>
+<summary>Содержание</summary>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#массивы" id="toc-массивы">Массивы</a></li>
+</ul>
+</nav>
+</details>
+<h1 id="массивы">Массивы</h1>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+// массив - это почти тоже самое, что указатель
+
+int main()
+{
+    int a[10]; // массив типа int размера 10
+    double b[3] = {3.14, 2.71828, 42.2}; // инициализация массива
+
+    double* p = b; // массив - это почти указатель на первый элемент
+
+    std::cout &lt;&lt; *(p + 1) &lt;&lt; &quot;\n&quot;; // второй элемент массива
+
+    std::cout &lt;&lt; a[3] &lt;&lt; &quot;\n&quot;; // неизвестно что
+    std::cout &lt;&lt; b[2] &lt;&lt; &quot;\n&quot;; // последний элемент массива b
+
+    // на самом деле к указателю тоже можно обращаться в квадратных скобках
+    // и a[3] - это и есть *(a + 3)
+    int x = 1;
+    int* p_ = &amp;x;
+    std::cout &lt;&lt; p_[0] &lt;&lt; &quot;\n&quot;;
+
+    // поэтому отрицательные индексы - это нормально
+
+    p = &amp;b[2];
+
+    std::cout &lt;&lt; p[-1] &lt;&lt; &quot;\n&quot;;
+
+    // и это тоже нормально 😎
+
+    std::cout &lt;&lt; 2[b] &lt;&lt; &quot;\n&quot;; // потому что это *(2 + b)
+
+    // отличия массивов от указателей:
+
+    // массивы нельзя присваивать
+    // sizeof от массива возвращает суммарный размер всех элементов
+
+    std::cout &lt;&lt; sizeof a &lt;&lt; &quot;\n&quot; &lt;&lt; sizeof p &lt;&lt; &quot;\n&quot;;
+
+    // int a[3&#39;000&#39;000]; // так нельзя потому что размер стека примерно 4 MB и ничего не влезет
+
+    // а если хочу большой массив?
+    // выделяем в динамической памяти с помощью new
+
+    int* p__ = new int[1&#39;000&#39;000];
+
+    // чтобы освободить нужно писать с квадратными скобками
+
+    delete[] p__;
+
+    int n;
+    std::cin &gt;&gt; n;
+    int arr[n]; // вообще так делать плохо, потому что динамически выделять память на стеке нельзя
+
+}</code></pre>
+<script src="prism.js"></script>
+<script src="copy_code.js"></script>
+</body>
+</html>

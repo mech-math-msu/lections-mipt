@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2023-01-01" />
+  <meta name="keywords" content="лекции, мфти, мещерин, мещерин
+илья, тех, техать, 1 курс" />
+  <title>С++</title>
+  <link rel="stylesheet" href="styles.css">
+<link href="prism-monokai.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+<!--<link rel="stylesheet" type="text/css" href="https://jsxgraph.org/distrib/jsxgraph.css" />
+ <script type="text/javascript" src="https://jsxgraph.org/distrib/jsxgraphcore.js"></script>-->
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">С++</h1>
+<p class="date">2023</p>
+</header>
+<details>
+<summary>Содержание</summary>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#введение" id="toc-введение">Введение</a>
+<ul>
+<li><a href="#полезные-ссылки" id="toc-полезные-ссылки">Полезные
+ссылки</a></li>
+<li><a href="#книжки" id="toc-книжки">Книжки</a></li>
+<li><a href="#знакомство-с-компилятором-и-первая-программа"
+id="toc-знакомство-с-компилятором-и-первая-программа">Знакомство с
+компилятором и первая программа</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+<h1 id="введение">Введение</h1>
+<hr />
+<p>Почему C++? Потому что, если разберешься в плюсах, то остальные языки
+программирования выучить несложно.</p>
+<h2 id="полезные-ссылки">Полезные ссылки</h2>
+<hr />
+<p><a href="https://isocpp.org/std/the-standard">С++ standard</a> -
+библия C++ на ~1400 страниц. Если вы сможете это прочесть, то …</p>
+<p><a href="https://cppreference.com">Более читаемый стандарт</a></p>
+<p><a href="https://eel.is/c++draft/">Стандарт с нормальными
+ссылками</a></p>
+<p><a href="https://stackoverflow.com">Лучший сайт с вопросами и
+ответами по проге</a></p>
+<h2 id="книжки">Книжки</h2>
+<hr />
+<ul>
+<li>Мейерс - Эффективное использование C++</li>
+<li>Мейерс - Наиболее эффективное использование C++</li>
+<li>Мейерс - Эффективный и современный C++</li>
+</ul>
+<p>Написаны в формате советов.</p>
+<h2 id="знакомство-с-компилятором-и-первая-программа">Знакомство с
+компилятором и первая программа</h2>
+<hr />
+<p><strong>Компилятор</strong> - это программа, которая превращает код
+на человекочитаемом языке в машинный код.</p>
+<p>У C++ несколько компиляторов. Самый известный это Gnu Compiler
+Collection (GCC). Его и будем использовать.</p>
+<p>Чтобы скомпилировать код на C++ в Unix операционке нужно
+написать:</p>
+<pre class="language-bash"><code class="language-bash">g++ file.cpp -o file</code></pre>
+<p>Чтобы запустить:</p>
+<pre class="language-bash"><code class="language-bash">./file</code></pre>
+<p>У языка C++ много различных стандартов. Чтобы использовать какой-то
+определенный при компиляции, надо написать:</p>
+<pre class="language-bash"><code class="language-bash">g++ --std=c++17 file.cpp -o file</code></pre>
+<p>Также в комиляторе <code class="language-bash">g++</code> существует
+встроенный оптимизатор трех различных видов (<code class="language-bash">-O1</code>, <code class="language-bash">-O2</code>, <code class="language-bash">-O3</code>). Чтобы скомпилироватьс оптимизацией нужно
+написать:</p>
+<pre class="language-bash"><code class="language-bash">g++ -O2 file.cpp -o file</code></pre>
+<p>Еще можно указать <code class="language-bash">-Wall</code>, чтобы компилятор
+предупреждал о максимальном количестве проблем в коде:</p>
+<pre class="language-bash"><code class="language-bash">g++ -Wall file.cpp -o file</code></pre>
+<p>Если указать <code class="language-bash">-Werror</code>, то компилятор будет
+считать все <code class="language-cpp">warning'</code>и ошибками:</p>
+<pre class="language-bash"><code class="language-bash">g++ -Werror -Wall file.cpp -o file</code></pre>
+<p>Ну и <code class="language-bash">-Wextra</code>, чтобы компилятор проверял
+каждый чих (все равно не спасет от ошибок :))</p>
+<pre class="language-bash"><code class="language-bash">g++ -Werror -Wall -Wextra file.cpp -o file</code></pre>
+<p>Код первой программы:</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt; // input output stream (ввод и вывод)
+
+int main()
+{
+    int x; // объявление переменной (целое число)
+    std::cin &gt;&gt; x; // считывание из потока ввода в переменную
+    std::cout &lt;&lt; x &lt;&lt; &quot;\n&quot;; // запись в поток вывода
+}</code></pre>
+<script src="prism.js"></script>
+<script src="copy_code.js"></script>
+</body>
+</html>

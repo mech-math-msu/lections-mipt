@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2023-01-01" />
+  <meta name="keywords" content="лекции, мфти, мещерин, мещерин
+илья, тех, техать, 1 курс" />
+  <title>С++</title>
+  <link rel="stylesheet" href="styles.css">
+<link href="prism-monokai.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+<!--<link rel="stylesheet" type="text/css" href="https://jsxgraph.org/distrib/jsxgraph.css" />
+ <script type="text/javascript" src="https://jsxgraph.org/distrib/jsxgraphcore.js"></script>-->
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">С++</h1>
+<p class="date">2023</p>
+</header>
+<details>
+<summary>Содержание</summary>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#основные-типы-данных-и-операции-с-ними"
+id="toc-основные-типы-данных-и-операции-с-ними">Основные типы данных и
+операции с ними</a>
+<ul>
+<li><a href="#основные-типы-данных-basic-types"
+id="toc-основные-типы-данных-basic-types">Основные типы данных (basic
+types)</a></li>
+<li><a href="#различные-способы-инициализации-базовых-типов"
+id="toc-различные-способы-инициализации-базовых-типов">Различные способы
+инициализации базовых типов</a></li>
+<li><a href="#операции-с-базовыми-типами"
+id="toc-операции-с-базовыми-типами">Операции с базовыми типами</a></li>
+<li><a href="#приведение-типов" id="toc-приведение-типов">Приведение
+типов</a>
+<ul>
+<li><a href="#неявное-приведение-типов"
+id="toc-неявное-приведение-типов">Неявное приведение типов</a></li>
+</ul></li>
+<li><a href="#базовые-контейнеры" id="toc-базовые-контейнеры">Базовые
+контейнеры</a>
+<ul>
+<li><a href="#string" id="toc-string">String</a></li>
+<li><a href="#vector-queue-и-stack"
+id="toc-vector-queue-и-stack">Vector, Queue и Stack</a></li>
+<li><a href="#set-и-map" id="toc-set-и-map">Set и Map</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+<h1 id="основные-типы-данных-и-операции-с-ними">Основные типы данных и
+операции с ними</h1>
+<hr />
+<p>C++ - <strong>статически</strong> <a href="#fn1" class="footnote-ref"
+id="fnref1" role="doc-noteref"><sup>1</sup></a>
+<strong>типизированный</strong> <a href="#fn2" class="footnote-ref"
+id="fnref2" role="doc-noteref"><sup>2</sup></a> язык.</p>
+<h2 id="основные-типы-данных-basic-types">Основные типы данных (basic
+types)</h2>
+<hr />
+<dl>
+<dt><font size="6"><code class="language-cpp">void</code></font></dt>
+<dd>
+<p><strong>Ничего</strong>.</p>
+</dd>
+<dt><font size="6"><code class="language-cpp">int</code></font></dt>
+<dd>
+<p><strong>Целое число</strong> (integer).</p>
+<p>Обычно занимает 4 байта. Целые числа хранятся в двоичном виде.</p>
+<p>Принимает значения: <code class="language-cpp">[-2**31, 2**31)</code>. <a
+href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a></p>
+<p><code class="language-cpp">2**31 == 2'147'483'648</code>, а <code class="language-cpp">2'147'483'647</code> - простое число <span class="emoji"
+data-emoji="tada">🎉</span>. <a href="#fn4" class="footnote-ref"
+id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
+<p>Зачем знать это число? Чтобы понимать влезет ли нужная величина в
+<code class="language-cpp">int</code>. <a href="#fn5" class="footnote-ref"
+id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<p><strong>Другие целочисленные типы:</strong></p>
+<dl>
+<dt><code class="language-cpp">short</code></dt>
+<dd>
+<p>Обычно 2 байта.</p>
+</dd>
+<dt><code class="language-cpp">long</code></dt>
+<dd>
+<p>Обычно 4 байта, сейчас практически не используется и эквивалентен
+<code class="language-cpp">int</code>.</p>
+</dd>
+<dt><code class="language-cpp">long long</code></dt>
+<dd>
+<p>Обычно 8 байт. <code class="language-cpp">[-2**63, 2**63)</code><a href="#fn6"
+class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>,
+<code class="language-cpp">2**63 ~ 9 * 10**18</code></p>
+</dd>
+</dl>
+<p>К каждому из этих типов можно приписать <code class="language-cpp">unsigned</code>, и тогда этот тип станет беззнаковым и
+соответственно возрастет максимальное значение <a href="#fn7"
+class="footnote-ref" id="fnref7"
+role="doc-noteref"><sup>7</sup></a>.</p>
+<p>Например: <code class="language-cpp">unsigned int</code> принимает значения
+<code class="language-cpp">[0, 2**32)</code></p>
+<p><strong>Еще целочисленные типы:</strong></p>
+<p><code class="language-cpp">int8_t</code> <code class="language-cpp">int32_t</code>
+<code class="language-cpp">int64_t</code> <code class="language-cpp">uint8_t</code> <code class="language-cpp">uint32_t</code> <code class="language-cpp">uint64_t</code> - нужны,
+если вам требуется ровно 32 бита или ровно 64 бита.</p>
+<p><code class="language-cpp">size_t</code> - это алиас для <code class="language-cpp">uint64_t</code>, но зависит от вашего железа.</p>
+<p>Операции над целочисленными переменными: <code class="language-cpp">+ - /</code></p>
+</dd>
+<dt><font size="6"><code class="language-cpp">double</code></font></dt>
+<dd>
+<p><strong>Вещественное число</strong> (<code class="language-cpp">double</code>
+потому что в два раза больше памяти, чем на <code class="language-cpp">float</code>).</p>
+<p>Обычно занимает 8 байт.</p>
+<p>Немного о хранении вещественных чисел:</p>
+<figure>
+<img src="img/double_repr.png"
+alt="IEEE754 double-precision floating-point format" />
+<figcaption aria-hidden="true"><a
+href="https://en.wikipedia.org/wiki/Double-precision_floating-point_format">IEEE754
+double-precision floating-point format</a></figcaption>
+</figure>
+<p><strong>Мантисса</strong> (fraction <code class="language-cpp">52</code> бита)
+- беззнаковое число и неявный бит равный <code class="language-cpp">1</code>
+перед числом.</p>
+<p><strong>Экспонента</strong> (exponent <code class="language-cpp">11</code>
+бит) - число от <code class="language-cpp">0</code> до <code class="language-cpp">2047</code>. Чтобы получить представленное число, нужно
+домножить мантиссу на <code class="language-cpp">2**(exponent - 1023)</code>.
+Диапазон значений <code class="language-cpp">exponent - 1023</code>: <code class="language-cpp">[-1022, 1023]</code>, потому что <code class="language-cpp">-1023</code> и <code class="language-cpp">1024</code> зарезервированы
+для специальных чисел (знаковый ноль и бесконечность).</p>
+<p><strong>Знак числа</strong> (sign <code class="language-cpp">1</code> бит) -
+<code class="language-cpp">1</code> или <code class="language-cpp">0</code></p>
+<p>Поэтому между <code class="language-cpp">2**52 = 4'503'599'627'370'496</code>
+и <code class="language-cpp">2**53=9'007'199'254'740'992</code> представимые с
+помощью <code class="language-cpp">double</code> числа - это целые числа. <a
+href="#fn8" class="footnote-ref" id="fnref8"
+role="doc-noteref"><sup>8</sup></a>. Для чисел от <code class="language-cpp">2**53</code> до <code class="language-cpp">2**53</code>, все
+домножается на 2, поэтому представимы только четные числа и т.д.</p>
+<p><strong>Пример:</strong></p>
+<p><code class="language-cpp">0 10000000000 1000000000000000000000000000000000000000000000000000</code><sub>2</sub></p>
+<p>Знак равен <code class="language-cpp">0</code><sub>2</sub>, значит число
+положительное.</p>
+<p>Экспонента <code class="language-cpp">10000000000</code><sub>2</sub> = <code class="language-cpp">1024</code>, вычитаем <code class="language-cpp">1023</code>,
+получаем <code class="language-cpp">1</code>, значит число будет домножаться на
+<code class="language-cpp">2**1</code>.</p>
+<p>Мантисса <code class="language-cpp">1000000000000000000000000000000000000000000000000000</code><sub>2</sub>.
+Дописываем неявную <code class="language-cpp">1</code> и получаем <code class="language-cpp">1.1</code><sub>2</sub>, домножаем на <code class="language-cpp">2</code>, получаем <code class="language-cpp">11</code><sub>2</sub> =
+<code class="language-cpp">3</code>.</p>
+<p><strong>Другие типы для представления чисел с плавающей
+точкой:</strong></p>
+<dl>
+<dt><code class="language-cpp">float</code></dt>
+<dd>
+<p>Обычно 4 байта.</p>
+</dd>
+<dt><code class="language-cpp">long double</code></dt>
+<dd>
+<p>Обычно 16 байта.</p>
+</dd>
+</dl>
+</dd>
+<dt><font size="6"><code class="language-cpp">char</code></font></dt>
+<dd>
+<p><strong>Символ</strong> (character).</p>
+<p>Занимает 1 байт.</p>
+<p>По сути тоже самое, что однобайтовое целое число. Только, если
+складывать и умножать <code class="language-cpp">char</code>, то получается целое
+число.</p>
+<p><code class="language-cpp">char</code> может быть <code class="language-cpp">signed</code> и <code class="language-cpp">unsigned</code>. По
+умолчанию <code class="language-cpp">char</code> беззнаковый, но это не точно,
+так что лучше все указывать в коде.</p>
+</dd>
+<dt><font size="6"><code class="language-cpp">bool</code></font></dt>
+<dd>
+<p><strong>Булева переменная</strong> (boolean).</p>
+<p>Занимает 1 байт.</p>
+<p><code class="language-cpp">true</code> или <code class="language-cpp">false</code>.</p>
+</dd>
+</dl>
+<h2 id="различные-способы-инициализации-базовых-типов">Различные способы
+инициализации базовых типов</h2>
+<hr />
+<pre class="language-cpp"><code class="language-cpp">int main()
+{
+    int a = 1&#39;243&#39;243;
+    int b = 5;
+    int x = 0xff; // 255 в шестнадцатеричной системе
+    int y = 0b10;
+
+    double c = 1.345;
+    double d = .8;
+    double e = 0;
+    double f = .1e-15; // scientific notation
+
+    char g = &#39;a&#39;;
+    char p = 78; // N, но так делать не стоит
+
+    bool pointers_is_cool = true;
+    bool computer_is_crazy = false;
+}</code></pre>
+<h2 id="операции-с-базовыми-типами">Операции с базовыми типами</h2>
+<hr />
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+
+int main()
+{
+    std::cout &lt;&lt; -42 % 5 &lt;&lt; &quot;\n&quot;; // остаток от деления (не всегда положительный)
+
+    std::cout &lt;&lt; 25 / 4 &lt;&lt; &quot;\n&quot;; // целочисленное деление, если оба числа целые
+    std::cout &lt;&lt; 3.14 / 2 &lt;&lt; &quot;\n&quot;; // если хотя бы одно число с плав. точкой,
+    // то деление обычное и возвращается double
+    // на самом деле арифметические операции
+    // всегда проводятся с операндами одного типа
+    // поэтому, если делим double на int, то сначала
+    // происходит неявное приведение типов
+
+    std::cout &lt;&lt; 5 + 3 * 2.578 &lt;&lt; &quot;\n&quot;; // очевидно
+    std::cout &lt;&lt; (5 &gt; 4) &lt;&lt; &quot;\n&quot;; // больше меньше, возвращается bool
+
+    // литеральные суффиксы
+    std::cout &lt;&lt; 3u &lt;&lt; &quot;\n&quot;; // компилятор считает, что 3 типа unsigned
+    std::cout &lt;&lt; 3ll &lt;&lt; &quot;\n&quot;; // компилятор считает, что 3 типа long long
+    std::cout &lt;&lt; 3f &lt;&lt; &quot;\n&quot;; // компилятор считает, что 3 типа float
+
+    std::cout &lt;&lt; &#39;a&#39; + &#39;b&#39; &lt;&lt; &quot;\n&quot;; // возвращается int
+
+    std::cout &lt;&lt; true || false &lt;&lt; &quot;\n&quot;; // или
+    std::cout &lt;&lt; true &amp;&amp; false &lt;&lt; &quot;\n&quot;; // и
+    std::cout &lt;&lt; true != false &lt;&lt; &quot;\n&quot;; // не равно
+    std::cout &lt;&lt; true == false &lt;&lt; &quot;\n&quot;; // равно
+}
+</code></pre>
+<h2 id="приведение-типов">Приведение типов</h2>
+<hr />
+<p><strong>Integer promotion</strong> - это приведение различных
+целочисленных типов друг к другу.</p>
+<p><strong>Floating point promotion</strong> - это приведение различных
+вещественных типов друг к другу.</p>
+<h3 id="неявное-приведение-типов">Неявное приведение типов</h3>
+<hr />
+<p>Когда проводятся операции с различными типами, компилятор сам решает,
+что к чему приводить.</p>
+<p>В общем и целом это плохо, так что следите за тем, чтобы все
+приводилось явно.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main()
+{
+    unsigned int a = 0;
+    int b = -1;
+
+    float c = 5.;
+
+    std::cout &lt;&lt; с + 0.9 &lt;&lt; &quot;\n&quot;; // результат будет типа double
+    std::cout &lt;&lt; с + 0.9f &lt;&lt; &quot;\n&quot;; // правильно писать, используя литеральные суффиксы
+
+    std::cout &lt;&lt; a + b &lt;&lt; &quot;\n&quot;; // выведет 4294967295, потому что c++ приводит int к unsigned int
+
+    std::vector&lt;int&gt; a = {};
+    std::cout &lt;&lt; a.size() - 1 &lt;&lt; &quot;\n&quot;; // выведет 4294967295, по той же причине, что и выше, но код такой логичный :)
+}</code></pre>
+<h2 id="базовые-контейнеры">Базовые контейнеры</h2>
+<hr />
+<h3 id="string">String</h3>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+int main()
+{
+    std::string s = &quot;undefined&quot;;
+
+    std::cout &lt;&lt; s.length() &lt;&lt; &quot;\n&quot;; // количество символов в строке
+    std::cout &lt;&lt; s.size() &lt;&lt; &quot;\n&quot;; // количество символов в строке
+
+    std::cout &lt;&lt; s[0] &lt;&lt; &quot;\n&quot;; // u берем символ по нулевому индексу
+
+    std::cout &lt;&lt; s.substr(3, 2) &lt;&lt; &quot;\n&quot;; // ef вернет подстроку начиная с 3 символа и длины 2 символа
+
+    std::cout &lt;&lt; s + &#39;9&#39; &lt;&lt; &quot;\n&quot;;
+
+    s += &#39;0&#39;;
+    s[1] = &#39;4&#39;;
+    s += s;
+
+    std::cout &lt;&lt; s &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; s + s &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<h3 id="vector-queue-и-stack">Vector, Queue и Stack</h3>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt; // вектор - это массив переменного размера
+#include &lt;queue&gt;
+#include &lt;stack&gt;
+
+int main()
+{
+    std::vector&lt;int&gt; a; // в &lt;&gt; указывается тип элементов
+    // выше создали пустой вектор
+
+    std::vector&lt;int&gt; b = {1, 2, 3, 4, 5}; // инициализировали
+
+    for (int x: b) { // так можно выводить элементы в контейнере
+        std::cout &lt;&lt; x &lt;&lt; &quot;\n&quot;;
+    }
+
+    std::vector&lt;int&gt; v(10); // создали вектор размера 10
+    // гарантируется, что вектор заполнен нулями
+
+    v.resize(20); // изменение размера вектора
+    // если размер был больше, то хвост выкидывается
+    // если меньше, то дозаполняется нулями
+
+    v.push_back(4); // добавление элемента в конец вектора
+    v.pop_back(); // удаление элемента из конца вектора
+    std::cout &lt;&lt; v.front(); // первый (нулевой индекс) элемент вектора
+    std::cout &lt;&lt; v.back(); // последний элемент вектора
+
+    std::stack&lt;int&gt; st; // создали стэк
+    std::queue&lt;int&gt; q; // создали очередь
+
+    st.push(3); // добавить в конец стека 3
+    st.pop(); // удалить последний элемент стека и вернуть его
+    st.top(); // вернуть последний элемент стека
+
+    q.push(3); // добавить в конец очереди 3
+    q.front(); // удалить первый элемент очереди и вернуть его
+
+    // для любого контейнера
+    v.empty(); // возвращает true, если контейнер пуст, иначе false
+
+}</code></pre>
+<h3 id="set-и-map">Set и Map</h3>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;set&gt;
+#include &lt;map&gt;
+#include &lt;string&gt;
+
+int main()
+{
+    std::set&lt;int&gt; s;
+
+    s.insert(3); // добавляет 3 в конец
+    s.erase(3); // удаляет 3, если она есть, иначе ничего не делает
+    s.count(3); // возвращает false, если элемента нет и true иначе
+    s.size(); // размер
+
+    std::map&lt;std::string, int&gt; m;
+
+    m[&quot;apple&quot;] = 3;
+    m[&quot;pear&quot;] = 5;
+    m[&quot;imtired&quot;] = 10000;
+
+    std::cout &lt;&lt; m.size() &lt;&lt; &quot;\n&quot;; // размер
+
+    std::cout &lt;&lt; m[&quot;pear&quot;] &lt;&lt; &quot;\n&quot;; // выведет 5
+    std::cout &lt;&lt; m[&quot;banana&quot;] &lt;&lt; &quot;\n&quot;; // создаст новую пару &quot;banana&quot; - 0 (значение по умолчанию) и выведет ноль
+
+    m.count(&quot;apple&quot;); // возвращает false, если элемента нет и true иначе
+}</code></pre>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Тип каждой переменной известен на этапе компиляции<a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>У каждой переменной есть тип<a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p><code class="language-cpp">**</code> - обозначает возведение в
+степень (в c++ нет встроенной операции возведения в степень).<a
+href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>В линуксе есть команда <code class="language-bash">factor</code>,
+которая раскладывает число на простые множители <code class="language-bash">factor 2023</code><a href="#fnref4" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Есть проблема 2039 года. В unix системах время
+отсчитывается в секундах с 1 января 1970 года и в 2039 году количество
+секунд перестанет помещаться в <code class="language-cpp">int</code><a
+href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p><code class="language-cpp">**</code> - обозначает возведение в
+степень (в c++ нет встроенной операции возведения в степень).<a
+href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Добавляется тот бит, в котором хранился знак<a
+href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Потому что на точность ничего не останется. Все 52 бита
+мантиссы занимает само число, а экспонента равна 1.<a href="#fnref8"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+<script src="prism.js"></script>
+<script src="copy_code.js"></script>
+</body>
+</html>

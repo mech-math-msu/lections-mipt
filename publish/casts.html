@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2023-01-01" />
+  <meta name="keywords" content="лекции, мфти, мещерин, мещерин
+илья, тех, техать, 1 курс" />
+  <title>С++</title>
+  <link rel="stylesheet" href="styles.css">
+<link href="prism-monokai.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+<!--<link rel="stylesheet" type="text/css" href="https://jsxgraph.org/distrib/jsxgraph.css" />
+ <script type="text/javascript" src="https://jsxgraph.org/distrib/jsxgraphcore.js"></script>-->
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">С++</h1>
+<p class="date">2023</p>
+</header>
+<details>
+<summary>Содержание</summary>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#приведения-типов" id="toc-приведения-типов">Приведения
+типов</a>
+<ul>
+<li><a href="#static_cast" id="toc-static_cast">1. <code class="language-cpp">static_cast</code></a></li>
+<li><a href="#reinterpret_cast" id="toc-reinterpret_cast">2. <code class="language-cpp">reinterpret_cast</code></a></li>
+<li><a href="#const_cast" id="toc-const_cast">3. <code class="language-cpp">const_cast</code></a></li>
+<li><a href="#с-style-cast" id="toc-с-style-cast">4. С-style
+cast</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+<h1 id="приведения-типов">Приведения типов</h1>
+<blockquote>
+<p>C++, как вы знаете, язык чрезвычайно богатый. В нем есть аж пять
+видов приведения типов. Кто бы мог подумать?</p>
+</blockquote>
+<p>Мы изучим 4 вида, а пятый оставим на потом. 3 из этих четырех очень
+плохи по code-style и их использовать нельзя. 😉</p>
+<h2 id="static_cast">1. <code class="language-cpp">static_cast</code></h2>
+<hr />
+<p><code class="language-cpp">static_cast</code> - создает новый объект
+(копию).</p>
+<p>Почему <code class="language-cpp">static</code>? Потому что уже на этапе
+компиляции понятно, что проблема в касте.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+int main()
+{
+    int a = 9;
+    double b = static_cast&lt;double&gt;(a); // приведение типов здорового человека
+    std::cout &lt;&lt; b / 4 &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<blockquote>
+<p>Начинаются запрещенные заклинания</p>
+</blockquote>
+<h2 id="reinterpret_cast">2. <code class="language-cpp">reinterpret_cast</code></h2>
+<hr />
+<p>Есть мягкая форма, которую можно иногда использовать, и жесткая
+форма, которую «нельзя использовать».</p>
+<p><code class="language-cpp">reinterpret_cast</code> позволяет трактовать байты
+одного типа, как байты другого типа, только если тип не константный.</p>
+<p><code class="language-cpp">reinterpret_cast</code> не создает нового объекта,
+поэтому всегда нужно получать ссылку или укащатель.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+int main()
+{
+    int x = 1;
+    double y = *reinterpret_cast&lt;double*&gt;(&amp;x);
+    std::cout &lt;&lt; y &lt;&lt; &quot;\n&quot;; // это undefined behaviour
+    // std::cout &lt;&lt; *static_cast&lt;double*&gt;(&amp;x) &lt;&lt; &quot;\n&quot;; // а так не работает
+
+    double a = 3;
+    std::cout &lt;&lt; reinterpret_cast&lt;int&amp;&gt;(a) &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<p>Сто раз подумайте прежде чем использовать <code class="language-cpp">reinterpret_cast</code>, а лучше вообще не используйте.</p>
+<blockquote>
+<p><code class="language-cpp">reinterpret_cast</code> - это как ФСБ врывается в
+ваш дом. В этот момент она уже не смотрит, что у вас двери заперты,
+шкафчик, который открывать нельзя, памятная фотография - это как бы
+неважно. <a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></p>
+</blockquote>
+<h2 id="const_cast">3. <code class="language-cpp">const_cast</code></h2>
+<hr />
+<p><code class="language-cpp">const_cast</code> может кастовать константы.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+int main()
+{
+    const int x = 1;
+    std::cout &lt;&lt; const_cast&lt;int&amp;&gt;(x) &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<p>Если вам нужен <code class="language-cpp">const_cast</code>, то с вероятностью
+88% вы неправы.</p>
+<h2 id="с-style-cast">4. С-style cast</h2>
+<hr />
+<p>По очереди применяет <code class="language-cpp">static_cast</code>, <code class="language-cpp">reinterpret_cast</code> и <code class="language-cpp">const_cast</code>.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+int main()
+{
+    unsigned int x = 0;
+    int y = (int) x;
+    std::cout &lt;&lt; y &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<p>В production нельзя использовать.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Про <code class="language-cpp">reinterpret_cast</code> между
+классами наследниками и родителями.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+<script src="prism.js"></script>
+<script src="copy_code.js"></script>
+</body>
+</html>
