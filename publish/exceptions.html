@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2023-01-01" />
+  <meta name="keywords" content="лекции, мфти, мещерин, мещерин
+илья, тех, техать, 1 курс" />
+  <title>С++</title>
+  <link rel="stylesheet" href="styles.css">
+<link href="prism-monokai.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+<!--<link rel="stylesheet" type="text/css" href="https://jsxgraph.org/distrib/jsxgraph.css" />
+ <script type="text/javascript" src="https://jsxgraph.org/distrib/jsxgraphcore.js"></script>-->
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">С++</h1>
+<p class="date">2023</p>
+</header>
+<details>
+<summary>Содержание</summary>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#исключения" id="toc-исключения">Исключения</a>
+<ul>
+<li><a href="#оператор-throw" id="toc-оператор-throw">Оператор <code class="language-cpp">throw</code></a></li>
+<li><a href="#разница-между-исключениями-и-ошибками-времени-выполнения"
+id="toc-разница-между-исключениями-и-ошибками-времени-выполнения">Разница
+между исключениями и ошибками времени выполнения</a></li>
+<li><a href="#метод-at-у-контейнеров"
+id="toc-метод-at-у-контейнеров">Метод <code class="language-cpp">at</code> у
+контейнеров</a></li>
+<li><a href="#правила-ловли-исключений"
+id="toc-правила-ловли-исключений">Правила ловли исключений</a>
+<ul>
+<li><a href="#как-работает-throw" id="toc-как-работает-throw">Как
+работает <code class="language-cpp">throw</code></a></li>
+</ul></li>
+<li><a href="#throw-внутри-catch" id="toc-throw-внутри-catch"><code class="language-cpp">throw</code> внутри <code class="language-cpp">catch</code></a></li>
+<li><a href="#исключения-в-конструкторах-и-raii"
+id="toc-исключения-в-конструкторах-и-raii">Исключения в конструкторах и
+RAII</a></li>
+<li><a href="#умные-указатели" id="toc-умные-указатели">Умные
+указатели</a></li>
+<li><a href="#спецификация-исключений-и-noexcept"
+id="toc-спецификация-исключений-и-noexcept">Спецификация исключений и
+<code class="language-cpp">noexcept</code></a></li>
+<li><a href="#исключения-в-деструкторе"
+id="toc-исключения-в-деструкторе">Исключения в деструкторе</a></li>
+<li><a href="#проблемы-с-исключениями"
+id="toc-проблемы-с-исключениями">Проблемы с исключениями</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+<h1 id="исключения">Исключения</h1>
+<hr />
+<h2 id="оператор-throw">Оператор <code class="language-cpp">throw</code></h2>
+<hr />
+<p>Это еще один способ выхода из функции. <code class="language-cpp">throw</code>
+- это бросить по-английски.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+struct ZeroDivisionError {
+};
+
+int divide(int a, int b) {
+    if (b == 0) {
+        throw ZeroDivisionError(); // бросаем исключение
+    }
+    return a / b;
+}
+
+int main() {
+    int a = 1;
+    try { // пытаемся выполнить
+        std::cout &lt;&lt; divide(a, 0) &lt;&lt; &quot;\n&quot;;        
+    } catch (ZeroDivisionError) { // ловим исключение
+        std::cout &lt;&lt; &quot;AAAAA\n&quot;;
+    }
+}</code></pre>
+<p><code class="language-cpp">catch (...)</code> - ловит любое исключение.</p>
+<h2
+id="разница-между-исключениями-и-ошибками-времени-выполнения">Разница
+между исключениями и ошибками времени выполнения</h2>
+<hr />
+<p>Оператором <code class="language-cpp">catch</code> можно поймать только
+исключения, брошенные с помощью <code class="language-cpp">throw</code>.</p>
+<p>Поэтому segmentation fault не ловится.</p>
+<p>Но можно ловить некоторые исключения. Например, при <code class="language-cpp">dynamic_cast</code> бросает исключение <code class="language-cpp">std::bad_cast</code>.</p>
+<p>Еще оператор <code class="language-cpp">new</code> бросает исключение <code class="language-cpp">std::bad_alloc</code>.</p>
+<h2 id="метод-at-у-контейнеров">Метод <code class="language-cpp">at</code> у
+контейнеров</h2>
+<hr />
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main() {
+    std::vector&lt;int&gt; a = {1, 2, 3, 4, 5};
+    try {
+        a.at(1&#39;000);
+    } catch (std::out_of_range) {
+        std::cout &lt;&lt; &quot;container index out of range\n&quot;;
+    }
+}</code></pre>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main() {
+    std::vector&lt;int&gt; a = {1, 2, 3, 4, 5};
+    try {
+        a.at(1&#39;000);
+    } catch (std::exception&amp; ex) {
+        std::cout &lt;&lt; ex.what() &lt;&lt; &quot;\n&quot;;
+    }
+}</code></pre>
+<p>Еще можно так:</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main() {
+    std::vector&lt;int&gt; a = {1, 2, 3, 4, 5};
+    try {
+        throw std::out_of_range(&quot;It&#39;s truth universally aknowleged that a single man in a possesion of a good fortune mast be in a want of wife.&quot;);
+        a.at(1&#39;000);
+    } catch (std::exception&amp; ex) {
+        std::cout &lt;&lt; ex.what() &lt;&lt; &quot;\n&quot;;
+    }
+}</code></pre>
+<h2 id="правила-ловли-исключений">Правила ловли исключений</h2>
+<hr />
+<p>В блоке <code class="language-cpp">catch</code> не действует приведение типов,
+кроме приведения типов между родителями и наследниками.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    try {
+        throw 1;
+    } catch (unsigned int x) { // ошибка не будет поймана, т.к. другой тип
+        std::cout &lt;&lt; &quot;error\n&quot;;
+    }
+}</code></pre>
+<p>Всегда будет выполнен первый подходящий <code class="language-cpp">catch</code>. и более никакие.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    try {
+        throw std::out_of_range(&quot;hmm&quot;);
+    } catch (std::exception&amp; ex) {
+        std::cout &lt;&lt; &quot;exception\n&quot;;
+    } catch (std::out_of_range) { // это не может выполнено никогда
+        std::cout &lt;&lt; &quot;out of range\n&quot;;
+    } catch (...) {
+        std::cout &lt;&lt; &quot;all\n&quot;;
+    }
+}</code></pre>
+<h3 id="как-работает-throw">Как работает <code class="language-cpp">throw</code></h3>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+struct Noisy {
+    Noisy() {
+        std::cout &lt;&lt; &quot;created\n&quot;;
+    }
+    Noisy(const Noisy&amp;) {
+        std::cout &lt;&lt; &quot;copied\n&quot;;
+    }
+    ~Noisy() {
+        std::cout &lt;&lt; &quot;destroyed\n&quot;;
+    }
+};
+
+void f() {
+    Noisy x;
+    throw x;
+}
+
+int main() {
+    try {
+        f();
+    } catch (const Noisy&amp; x) {
+        std::cout &lt;&lt; &quot;caught\n&quot;;
+    }
+}</code></pre>
+<h2 id="throw-внутри-catch"><code class="language-cpp">throw</code> внутри <code class="language-cpp">catch</code></h2>
+<hr />
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+void g() {
+    try {
+        throw std::out_of_range(&quot;aaa&quot;);
+    } catch (const std::exception&amp; ex) {
+        std::cout &lt;&lt; &quot;caught general\n&quot;;
+        throw; // пробрасывает исключение дальше
+    }
+}
+
+int main() {
+    try {
+        g();
+    } catch (const std::out_of_range&amp;) {
+        std::cout &lt;&lt; &quot;caught out of range exception\n&quot;;
+    }
+}</code></pre>
+<h2 id="исключения-в-конструкторах-и-raii">Исключения в конструкторах и
+RAII</h2>
+<hr />
+<p>Проблема: при <code class="language-cpp">throw</code> может происходить утечка
+памяти.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+struct S {
+    int* p = nullptr;
+    S(): p(new int(5)) {
+        throw 1; // деструктор не будет вызван и произойдет утечка
+    }
+    ~S() {
+        delete p;
+    }
+}
+
+int main() {
+    try {
+        S s;
+    } catch (int) { // произойдет утечка
+        std::cout &lt;&lt; &quot;\n&quot;;
+    }
+}</code></pre>
+<p>Как решать?</p>
+<h2 id="умные-указатели">Умные указатели</h2>
+<hr />
+<p>Известно, что перед <code class="language-cpp">throw</code> будут уничтожены
+все локальные поля.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+template &lt;typename T&gt;
+class SmartPtr {
+private:
+    T* ptr;
+public:
+    SmartPtr(T* ptr): ptr(ptr) {}
+    ~SmartPtr() {
+        delete ptr;
+    }
+};
+
+struct S {
+    SmartPtr&lt;int&gt; p = nullptr;
+    S(): p(new int(5)) {
+        throw 1; // теперь все хорошо
+    }
+};
+
+int main() {
+    try {
+        S s;
+    } catch (int) { // утечки нет
+        std::cout &lt;&lt; &quot;\n&quot;;
+    }
+}</code></pre>
+<p>Это и есть идиома RAII <a href="#fn1" class="footnote-ref"
+id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>И все бы хорошо, но возникает проблема при копировании умных
+указателей, потому что будет попытка дважды удалить один и тот же
+указатель.</p>
+<h2 id="спецификация-исключений-и-noexcept">Спецификация исключений и
+<code class="language-cpp">noexcept</code></h2>
+<hr />
+<p>Ключевое слово <code class="language-cpp">noexcept</code> показывает, что в
+функции не будет брошено исключений. Но это скорее обещание себе, и если
+бросить исключение, то программа скомпилируется и будет ошибка времени
+выполнения.</p>
+<p><code class="language-cpp">noexcept</code> пишется после определения
+функции.</p>
+<pre class="language-cpp"><code class="language-cpp">void f() noexcept {
+    //...
+}</code></pre>
+<h2 id="исключения-в-деструкторе">Исключения в деструкторе</h2>
+<hr />
+<p>Никогда так не делайте. И чтобы вам неповадно было бросать исключения
+из деструкторов, начиная с C++17 все деструкторы являются <code class="language-cpp">noexcept</code>.</p>
+<details>
+<summary>
+Если вам очень нужно, то можно:
+</summary>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+struct S {
+    ~S() noexcept(false) {
+        throw 1;
+    }
+}
+
+int main() {
+    
+}</code></pre>
+</details>
+<h2 id="проблемы-с-исключениями">Проблемы с исключениями</h2>
+<hr />
+<p>Что должен делать контейнер, если его элементы бросают
+исключения?</p>
+<ol type="1">
+<li>Вернуть все как было.</li>
+<li>Бросить все на произвол судьбы. (strong)</li>
+<li>Сделать что-то, чтобы можно было жить дальше. (basic)</li>
+</ol>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>resource acqusition is initialization (захват ресурсов -
+это инициализация)<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+<script src="prism.js"></script>
+<script src="copy_code.js"></script>
+</body>
+</html>

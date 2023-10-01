@@ -196,6 +196,16 @@ div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
+    color: #A6E22E !important;
+    background-color: #A6E22E !important;
+  width: 2rem;
+  margin: 0 0.8rem 0.2rem -1.6rem;
+  vertical-align: middle;
+}
+
+ul.task-list li input[type="checkbox"] {
+    color: #A6E22E !important;
+    background-color: #A6E22E !important;
   width: 2rem;
   margin: 0 0.8rem 0.2rem -1.6rem;
   vertical-align: middle;

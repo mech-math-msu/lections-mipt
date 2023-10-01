@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2023-01-01" />
+  <meta name="keywords" content="лекции, мфти, мещерин, мещерин
+илья, тех, техать, 1 курс" />
+  <title>С++</title>
+  <link rel="stylesheet" href="styles.css">
+<link href="prism-monokai.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+<!--<link rel="stylesheet" type="text/css" href="https://jsxgraph.org/distrib/jsxgraph.css" />
+ <script type="text/javascript" src="https://jsxgraph.org/distrib/jsxgraphcore.js"></script>-->
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">С++</h1>
+<p class="date">2023</p>
+</header>
+<details>
+<summary>Содержание</summary>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#полиморфизм-и-виртуальные-функции"
+id="toc-полиморфизм-и-виртуальные-функции">Полиморфизм и виртуальные
+функции</a>
+<ul>
+<li><a href="#виртуальные-функции"
+id="toc-виртуальные-функции">Виртуальные функции</a></li>
+<li><a href="#override" id="toc-override"><code class="language-cpp">override</code></a></li>
+<li><a href="#final" id="toc-final"><code class="language-cpp">final</code></a></li>
+<li><a href="#полиморфизм" id="toc-полиморфизм">Полиморфизм</a></li>
+<li><a href="#абстрактные-классы-и-чистые-виртуальные-методы"
+id="toc-абстрактные-классы-и-чистые-виртуальные-методы">Абстрактные
+классы и «чистые» виртуальные методы </a>
+<ul>
+<li><a href="#синтаксис-чистого-виртального-метода"
+id="toc-синтаксис-чистого-виртального-метода">Синтаксис чистого
+виртального метода 😎</a></li>
+</ul></li>
+<li><a href="#виртуальный-деструктор"
+id="toc-виртуальный-деструктор">Виртуальный деструктор</a></li>
+<li><a href="#rtti-and-dynamic-cast" id="toc-rtti-and-dynamic-cast">RTTI
+and dynamic cast </a></li>
+<li><a href="#dynamic_cast" id="toc-dynamic_cast"><code class="language-cpp">dynamic_cast</code></a></li>
+<li><a href="#оператор-typeid" id="toc-оператор-typeid">Оператор <code class="language-cpp">typeid</code></a></li>
+<li><a href="#устройство-полиморфных-объектов-и-vtables"
+id="toc-устройство-полиморфных-объектов-и-vtables">Устройство
+полиморфных объектов и vtables </a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+<h1 id="полиморфизм-и-виртуальные-функции">Полиморфизм и виртуальные
+функции</h1>
+<hr />
+<h2 id="виртуальные-функции">Виртуальные функции</h2>
+<blockquote>
+<p>От того как я называю объект зависит то, как я понимаю операции над
+ним.</p>
+<p>(с)</p>
+</blockquote>
+<p><img src="img/polymorhism.png" /></p>
+<blockquote>
+<p>Пусть есть книга рецептов и в ней в начале раздела про крупы написано
+как варить крупу в общем виде, а потом отдельно написано как варить
+некоторые крупы, например, гречку. Вам дают пачку гречки и говорят:
+“Сварите крупу.”</p>
+<p>Что вы делаете? Скорее всего, если вы не совсем долго изучали C++ и
+еще не совсем потеряли здравый рассудок, вы будете готовить гречку по
+рецепту гречки.</p>
+</blockquote>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+struct Base {
+    void f() {
+        std::cout &lt;&lt; &quot;я варю крупу\n&quot;;
+    }
+};
+
+struct Derived: public Base {
+    void f() {
+        std::cout &lt;&lt; &quot;я варю гречку\n&quot;;
+    }
+};
+
+int main() {
+    Base b;
+    Derived d;
+    Base&amp; b_ = d;
+
+    b.f(); // очевидно
+    d.f(); // очевидно
+
+    // Что выведет?
+
+    b_.f();
+
+    // выведет &quot;я варю крупу\n&quot;;
+}</code></pre>
+<p>Чтобы при создании объекта родителя <strong>по ссылке</strong> от
+объекта наследника использовался метод наследника, а не родителя, нужно
+написать перед методом родителя <code class="language-cpp">virtual</code>.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+struct Base {
+    virtual void f() {
+        std::cout &lt;&lt; &quot;я варю крупу\n&quot;;
+    }
+};
+
+struct Derived: public Base {
+    void f() {
+        std::cout &lt;&lt; &quot;я варю гречку\n&quot;;
+    }
+};
+
+int main() {
+    Base b;
+    Derived d;
+    Base&amp; b_ = d;
+
+    b.f(); // очевидно
+    d.f(); // очевидно
+
+    // Что выведет?
+
+    b_.f();
+
+    // выведет &quot;я варю гречку\n&quot;
+}</code></pre>
+<h2 id="override"><code class="language-cpp">override</code></h2>
+<hr />
+<p>Пишется после определения метода, перед открывающей фигурной
+скобкой.</p>
+<p>Это слово нужно, чтобы явно показать, что вы переопределяете
+виртуальный метод.</p>
+<h2 id="final"><code class="language-cpp">final</code></h2>
+<hr />
+<p>Пишется после определения метода, перед открывающей фигурной
+скобкой.</p>
+<p>Это слово нужно, чтобы запретить наследникам переопределять данный
+виртуальный метод.</p>
+<h2 id="полиморфизм">Полиморфизм</h2>
+<hr />
+<blockquote>
+<p>Что это такое? Песня группы «Научно-технический рэп» <a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+</blockquote>
+<p>Это то что дают виртуальные функции. Выполнение различных действий
+при одинаковых названиях.</p>
+<h2 id="абстрактные-классы-и-чистые-виртуальные-методы">Абстрактные
+классы и «чистые» виртуальные методы <a href="#fn2" class="footnote-ref"
+id="fnref2" role="doc-noteref"><sup>2</sup></a></h2>
+<hr />
+<p><strong>Pure virtual method</strong> - это специальный синтаксис,
+который показывает, что данный виртуальный метод не будет определен <a
+href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a> в родительском классе, и может быть
+определен в наследниках.</p>
+<h3 id="синтаксис-чистого-виртального-метода">Синтаксис чистого
+виртального метода 😎</h3>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+class Shape {
+public:
+    virtual double area() = 0; // если написать = 0, то метод становится
+                               // pyre virtual method 
+};
+
+int main() {
+    //Shape s; // ошибка, т.к. объекты абстрактных типов создавать нельзя
+}</code></pre>
+<p>Если в классе есть чистый виртуальный метод, то класс
+<strong>абстрактный</strong>.</p>
+<p>Объекты абстрактных типов создавать нельзя.</p>
+<p>Обязан ли наследник реализовывать pure virtual method?</p>
+<p>Нет, не обязан, но если такой метод не реализван, то наследник сам
+является абстрактным классом, и нельзя создавать экземпляры класса.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+class Shape {
+public:
+    virtual double area() const = 0;
+};
+
+// можно определить pure virtual method
+double Shape::area() const {
+    std::cout &lt;&lt; &quot;shape area\n&quot;;
+}
+
+class Square: public Shape {
+public:
+    virtual double area() const override {
+        std::cout &lt;&lt; &quot;square area\n&quot;;
+    }
+};
+
+int main() {
+    Square s;
+    s.area();
+
+    Shape&amp; s_ = s;
+
+    s_.area(); // будет вызван метод класса Square
+}</code></pre>
+<h2 id="виртуальный-деструктор">Виртуальный деструктор</h2>
+<hr />
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+struct Base {
+    int* b = new int();
+    ~Base() {
+        delete b;
+        std::cout &lt;&lt; &quot;Base destructor\n&quot;;
+    }
+};
+
+struct Derived: public Base {
+    int* d = new int();
+    ~Derived() {
+        delete d;
+        std::cout &lt;&lt; &quot;Derived destructor\n&quot;;
+    }
+};
+
+int main() {
+    Base* b = new Derived();
+    delete b; // какой деструктор будет вызван?
+    // только деструктор Base, поэтому будет утечка памяти
+}</code></pre>
+<p>Поэтому деструктор тоже нужно делать виртуальным.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+struct Base {
+    int* b = new int();
+    virtual ~Base() {
+        delete b;
+        std::cout &lt;&lt; &quot;Base destructor\n&quot;;
+    }
+};
+
+struct Derived: public Base {
+    int* d = new int();
+    ~Derived() {
+        delete d;
+        std::cout &lt;&lt; &quot;Derived destructor\n&quot;;
+    }
+};
+
+int main() {
+    Base* b = new Derived();
+    delete b; // какой деструктор будет вызван?
+    // только деструктор Base, поэтому будет утечка памяти
+}</code></pre>
+<h2 id="rtti-and-dynamic-cast">RTTI and dynamic cast <a href="#fn4"
+class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a></h2>
+<hr />
+<p>Тип <strong>полиморфный</strong>, если в нем есть хотя бы одна
+виртальная функция.</p>
+<p>Но что это значит для компилятора?</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+struct Base {
+    virtual ~Base() {}
+    virtual void f() {
+        std::cout &lt;&lt; &quot;base f\n&quot;;
+    }
+};
+
+struct Derived: public Base {
+    void f() override {
+        std::cout &lt;&lt; &quot;derived f\n&quot;;
+    }
+};
+
+int main() {
+    int x;
+    std::cin &gt;&gt; x;
+
+    Base b;
+    Derived d;
+
+    // в момент компиляции невозможно определить какую виртальную функцию использовать
+    Base&amp; b_ = x &gt; 0 ? b : d;
+
+    b_.f();
+}</code></pre>
+<p>Компилятор вынужден дополнять полиморфные типы некоторым полем,
+которое в runtime помогает понять какой тип на самом деле. Это и есть
+<strong>RTTI</strong>.</p>
+<h2 id="dynamic_cast"><code class="language-cpp">dynamic_cast</code></h2>
+<hr />
+<p><code class="language-cpp">dynamic_cast</code> позволяет приводить полиморфные
+типы друг к другу.</p>
+<p>Что он делает?</p>
+<ol type="1">
+<li>Во время компиляции смотрит на типы и проверяет можно ли
+теоретически привести их друг к другу (лежат ли они в одном и том же
+графе наследования).</li>
+<li>В момент выполнения смотрит на RTTI и определяет можно ли
+кастовать.</li>
+</ol>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+struct Granny {
+    virtual void f() {}
+};
+
+struct Mother: public Granny {
+};
+
+struct Father: public Granny {
+};
+
+struct Son: public Mother, public Father {
+};
+
+int main() {
+    Mother* m = new Son();
+
+    std::cout &lt;&lt; dynamic_cast&lt;Father*&gt;(m); // все ок
+    // если привести нельзя, то вернет nullptr
+
+    delete m;
+}</code></pre>
+<h2 id="оператор-typeid">Оператор <code class="language-cpp">typeid</code></h2>
+<hr />
+<p>Возвращает <code class="language-cpp">std::typeinfo</code>.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;typeinfo&gt;
+
+struct Granny {
+    virtual void f() {}
+};
+
+struct Mother: public Granny {
+};
+
+struct Father: public Granny {
+};
+
+struct Son: public Mother, public Father {
+};
+
+int main() {
+    Son s;
+
+    Mother&amp; m_ = s;
+
+    std::cout &lt;&lt; (typeid(m_) == typeid(s)) &lt;&lt; &quot;\n&quot;;
+
+    Mother m;
+    std::cout &lt;&lt; (typeid(m) == typeid(s)) &lt;&lt; &quot;\n&quot;;
+
+    std::cout &lt;&lt; typeid(m).name() &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<p><code class="language-cpp">typeid</code> - нужен очень редко.</p>
+<h2 id="устройство-полиморфных-объектов-и-vtables">Устройство
+полиморфных объектов и vtables <a href="#fn5" class="footnote-ref"
+id="fnref5" role="doc-noteref"><sup>5</sup></a></h2>
+<hr />
+<p>При создании полиморфного объекта в память кладется указатель <code class="language-cpp">vptr</code> на область в статичекой памяти, где лежит <code class="language-cpp">vtable</code> (таблица с данными о типе и виртуальных
+функциях). Этих таблиц столько же сколько полиморфных типов.</p>
+<div style="display: flex; flex-direction: row;">
+<div>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+struct Base {
+    virtual void f() { 
+        std::cout &lt;&lt; &quot;base f\n&quot;;
+    }
+    void foo() {}
+    int b;
+};
+
+struct Derived: public Base {
+    void f() {
+        std::cout &lt;&lt; &quot;derived f\n&quot;;
+    }
+    virtual void g() {}
+    int d;
+};
+
+int main() {
+    Derived d;
+    Base&amp; b = d;
+    // при создании по ссылке
+    // берется часть vtable
+    // до переменной d
+
+    // поэтому будет вызван 
+    // метод класса derived
+    b.f();
+}</code></pre>
+</div>
+<div style="width: 50%;">
+<p><img src="img/vtable.png" /></p>
+</div>
+</div>
+<p>А где функция <code class="language-cpp">foo</code>?</p>
+<p>Ее нет в таблице, потому что компилятор в момент компиляции знает
+какой код надо выполнить, а с виртальными функциями не так.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a
+href="https://www.youtube.com/watch?v=pmxBTAv9sb4">ссыль</a><a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Abstract classes and pure virtual methods<a
+href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Скорее не актуален, т.к. его можно определить.<a
+href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Run-Time Type Information<a href="#fnref4"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Vtables and layouts of polymorhic objects<a
+href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+<script src="prism.js"></script>
+<script src="copy_code.js"></script>
+</body>
+</html>

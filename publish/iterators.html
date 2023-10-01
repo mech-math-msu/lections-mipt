@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2023-01-01" />
+  <meta name="keywords" content="лекции, мфти, мещерин, мещерин
+илья, тех, техать, 1 курс" />
+  <title>С++</title>
+  <link rel="stylesheet" href="styles.css">
+<link href="prism-monokai.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+<!--<link rel="stylesheet" type="text/css" href="https://jsxgraph.org/distrib/jsxgraph.css" />
+ <script type="text/javascript" src="https://jsxgraph.org/distrib/jsxgraphcore.js"></script>-->
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">С++</h1>
+<p class="date">2023</p>
+</header>
+<details>
+<summary>Содержание</summary>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#итераторы" id="toc-итераторы">Итераторы</a>
+<ul>
+<li><a href="#виды-итераторов" id="toc-виды-итераторов">Виды
+итераторов</a></li>
+<li><a href="#функции-stdadvance-и-stddistance"
+id="toc-функции-stdadvance-и-stddistance">Функции <code class="language-cpp">std::advance</code> и <code class="language-cpp">std::distance</code></a>
+<ul>
+<li><a href="#реализация-stdadvance"
+id="toc-реализация-stdadvance">Реализация <code class="language-cpp">std::advance</code></a></li>
+</ul></li>
+<li><a href="#const-итераторы" id="toc-const-итераторы"><code class="language-py">const</code> итераторы</a>
+<ul>
+<li><a href="#как-реализовывать-константные-итераторы-не-копируя-код"
+id="toc-как-реализовывать-константные-итераторы-не-копируя-код">Как
+реализовывать константные итераторы, не копируя код?</a></li>
+</ul></li>
+<li><a href="#reverse-итераторы" id="toc-reverse-итераторы"><code class="language-cpp">reverse</code> итераторы</a></li>
+<li><a href="#output-итераторы" id="toc-output-итераторы"><code class="language-cpp">output</code> итераторы</a></li>
+<li><a href="#stream-итераторы" id="toc-stream-итераторы"><code class="language-cpp">stream</code> итераторы </a>
+<ul>
+<li><a href="#какие-бывают-потоки" id="toc-какие-бывают-потоки">Какие
+бывают потоки?</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+<h1 id="итераторы">Итераторы</h1>
+<hr />
+<p>Это штука, которая ведет себя как итератор.</p>
+<p>Что такое вести себя как итератор?</p>
+<p>Это значит позволять себя:</p>
+<ol type="1">
+<li>Разыменовывать</li>
+<li>Инкрементировать</li>
+<li>Сравнивать на равенство</li>
+</ol>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main() {
+    std::vector&lt;int&gt; v = {1, 2, 3, 4, 5};
+
+    std::vector&lt;int&gt;::iterator it = v.begin(); // итератор
+    std::cout &lt;&lt; *it &lt;&lt; &quot;\n&quot;; // разыменование
+    ++it; // инкремент
+    std::cout &lt;&lt; *it &lt;&lt; &quot;\n&quot;;
+
+    // v.end() - метод, который есть у всех контейнеров
+    // это указатель на память сразу за контейнером
+    // поэтому разыменование v.end() - это UB
+    for (std::vector&lt;int&gt;::iterator it = v.begin(); it != v.end(); ++it) {
+        std::cout &lt;&lt; *it &lt;&lt; &quot;\n&quot;;
+    }
+
+    for (int x: v) { // этот синтаксис делает тоже самое, что выше
+        std::cout &lt;&lt; x &lt;&lt; &quot;\n&quot;;
+    }
+    // и если реализовать контейнер, у которого будут методы begin и end
+    // и итератор
+    // то по нему можно будет ходить в таком цикле
+
+    //std::cout &lt;&lt; *v.end() &lt;&lt; &quot;\n&quot;; // неопределенное поведение
+}</code></pre>
+<h2 id="виды-итераторов">Виды итераторов</h2>
+<hr />
+<ol start="0" type="1">
+<li><p>InputIterator - позволяет пройтись только один раз. Как <code class="language-cpp">std::istream</code>.</p>
+<p><strong>Операции</strong>:</p>
+<ul>
+<li><code class="language-cpp">++</code></li>
+</ul></li>
+<li><p>ForwardIterator - можно идти только вперед. <a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Как
+<code class="language-cpp">std::forward_list, std::unordered_map/set</code>.</p>
+<p><strong>Операции</strong>:</p>
+<ul>
+<li><code class="language-cpp">++</code></li>
+</ul></li>
+<li><p>BidirectionalIterator - можно идти в две стороны. <a href="#fn2"
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Как
+<code class="language-cpp">std::list, std::map, std::set</code>.</p>
+<p><strong>Операции</strong>:</p>
+<ul>
+<li><code class="language-cpp">++</code></li>
+<li><code class="language-cpp">--</code></li>
+</ul></li>
+<li><p>RandomAccessIterator - можно «все что угодно». Как <code class="language-cpp">std::vector</code>.</p>
+<p><strong>Операции</strong>:</p>
+<ul>
+<li><code class="language-cpp">++</code></li>
+<li><code class="language-cpp">--</code></li>
+<li><code class="language-cpp">+= n</code></li>
+<li><code class="language-cpp">-= n</code></li>
+<li><code class="language-cpp">it1 - it2</code></li>
+<li><code class="language-cpp">it1 &gt; it2</code></li>
+</ul></li>
+</ol>
+<h2 id="функции-stdadvance-и-stddistance">Функции <code class="language-cpp">std::advance</code> и <code class="language-cpp">std::distance</code></h2>
+<hr />
+<p><code class="language-cpp">std::advance</code> - продвигает итератор на нужное
+количество шагов.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main() {
+    std::vector&lt;int&gt; v = {1, 2, 3, 4, 5};
+    std::vector&lt;int&gt;::iterator it = v.begin();
+
+    std::cout &lt;&lt; *it &lt;&lt; &quot;\n&quot;;
+    std::advance(it, 3);
+    std::cout &lt;&lt; *it &lt;&lt; &quot;\n&quot;;
+
+    std::vector&lt;int&gt;::iterator it_ = v.end();
+    std::cout &lt;&lt; &quot;distance between iters: &quot; &lt;&lt; std::distance(it, it_) &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<h3 id="реализация-stdadvance">Реализация <code class="language-cpp">std::advance</code></h3>
+<p>Как реализовать <code class="language-cpp">advance</code> так, чтобы она
+работала по-разному в зависимости от категории итератора?</p>
+<p><a
+href="https://en.cppreference.com/w/cpp/iterator/iterator_traits"><code class="language-cpp">std::iterator_traits</code></a> - структура с кучей полей,
+которая позволяет в числе прочего узнать категорию итератора.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;iterator&gt;
+
+template &lt;typename Iterator&gt;
+void advance_(const Iterator&amp; it, int n) {
+    if (std::is_same_v&lt;typename std::iterator_traits&lt;Iterator&gt;::iterator_category, typename std::random_access_iterator_tag) {
+        it += n; // но так работать не будет
+                 // потому что компилятор не может добавить n к любому типу
+    } else {
+        for (int i = 1; i &lt;= n; ++i; ++it);
+    }
+}
+
+int main() {
+    
+}</code></pre>
+<p>Есть два варианта решения:</p>
+<ol type="1">
+<li>Использовать <code class="language-cpp">constexpr</code>. Компилятор не
+компилирует булево выражение, помеченное <code class="language-cpp">constexpr</code>, если оно не выполнено. <a href="#fn3"
+class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a></li>
+</ol>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;iterator&gt;
+#include &lt;vector&gt;
+#include &lt;type_traits&gt;
+#include &lt;list&gt;
+
+template &lt;typename Iterator&gt;
+void advance_(Iterator&amp; it, int n) {
+    if constexpr (std::is_same_v&lt;
+        typename std::iterator_traits&lt;Iterator&gt;::iterator_category,
+        typename std::random_access_iterator_tag
+        &gt;) {
+        std::cout &lt;&lt; &quot;random access iterator\n&quot;;
+        it += n;
+    } 
+    else {
+        for (int i = 1; i &lt;= n; ++i, ++it);
+        std::cout &lt;&lt; &quot;no random access iterator\n&quot;;
+    }
+}
+
+int main() {
+    std::vector&lt;int&gt; v = {1, 2, 3, 4, 5};
+    std::vector&lt;int&gt;::iterator it = v.begin();
+
+    std::cout &lt;&lt; *it &lt;&lt; &quot;\n&quot;;
+    advance_(it, 3);
+    std::cout &lt;&lt; *it &lt;&lt; &quot;\n&quot;;
+
+    std::list&lt;int&gt; li = {1, 2, 3, 4, 5};
+    std::list&lt;int&gt;::iterator it_ = li.begin();
+
+    std::cout &lt;&lt; *it_ &lt;&lt; &quot;\n&quot;;
+    advance_(it_, 3);
+    std::cout &lt;&lt; *it_ &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<ol start="2" type="1">
+<li>Использовать перегрузку шаблонных функций.</li>
+</ol>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;iterator&gt;
+#include &lt;vector&gt;
+#include &lt;type_traits&gt;
+#include &lt;list&gt;
+
+template &lt;typename Iterator, typename IteratorCategory&gt;
+void advance__helper(Iterator&amp; it,
+                     int n,
+                     IteratorCategory) {
+    for (int i = 1; i &lt;= n; ++i, ++it);
+    std::cout &lt;&lt; &quot;no random access iterator\n&quot;;
+}
+
+template &lt;typename Iterator&gt;
+void advance__helper(Iterator&amp; it, 
+                     int n, 
+                     std::random_access_iterator_tag) {
+    std::cout &lt;&lt; &quot;random access iterator\n&quot;;
+    it += n;
+}
+
+template &lt;typename Iterator&gt;
+void advance_(Iterator&amp; it, int n) {
+    advance__helper(it, n, typename std::iterator_traits&lt;Iterator&gt;::iterator_category());
+}
+
+int main() {
+    std::vector&lt;int&gt; v = {1, 2, 3, 4, 5};
+    std::vector&lt;int&gt;::iterator it = v.begin();
+
+    std::cout &lt;&lt; *it &lt;&lt; &quot;\n&quot;;
+    advance_(it, 3);
+    std::cout &lt;&lt; *it &lt;&lt; &quot;\n&quot;;
+
+    std::list&lt;int&gt; li = {1, 2, 3, 4, 5};
+    std::list&lt;int&gt;::iterator it_ = li.begin();
+
+    std::cout &lt;&lt; *it_ &lt;&lt; &quot;\n&quot;;
+    advance_(it_, 3);
+    std::cout &lt;&lt; *it_ &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<h2 id="const-итераторы"><code class="language-py">const</code> итераторы</h2>
+<hr />
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;iterator&gt;
+#include &lt;vector&gt;
+#include &lt;type_traits&gt;
+#include &lt;list&gt;
+
+int main() {
+    std::vector&lt;int&gt; v = {1, 2, 3, 4, 5};
+    std::vector&lt;int&gt;::iterator it = v.begin();
+
+    *it = 4; // можно присваивать
+    std::cout &lt;&lt; v[0] &lt;&lt; &quot;\n&quot;;
+
+    std::vector&lt;int&gt;::const_iterator it_ = v.cbegin(); // константный итератор
+
+    //*it_ = 4; // ошибка: нельзя присваивать по константному итератору
+    std::cout &lt;&lt; v[0] &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<p>Функция <code class="language-cpp">begin()</code>, в зависимости от того
+константный ли контейнер, возвращает константный либо не константный
+итератор.</p>
+<h3 id="как-реализовывать-константные-итераторы-не-копируя-код">Как
+реализовывать константные итераторы, не копируя код?</h3>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;iterator&gt;
+#include &lt;type_traits&gt;
+
+using std::initializer_list;
+
+template &lt;bool Cond, typename T, typename T_&gt;
+struct conditional {
+    using type = T_;
+};
+
+template &lt;typename T, typename T_&gt;
+struct conditional&lt;true, T, T_&gt; {
+    using type = T;
+};
+
+template &lt;bool Cond, typename T, typename T_&gt;
+using conditional_t = typename conditional&lt;Cond, T, T_&gt;::type;
+
+template &lt;typename T&gt;
+class Vector {
+private:
+    size_t capacity = 0;
+    T* arr;
+public:
+    Vector(size_t capacity): capacity(capacity), arr(new T[capacity]) {}
+    Vector(initializer_list&lt;T&gt; lst): capacity(lst.size()), arr(new T[capacity]) {
+        std::copy(lst.begin(), lst.end(), arr);
+
+    }
+    ~Vector() {
+        delete[] arr;
+    }
+
+    void swap(Vector&amp; v) {
+        std::swap(v.capacity, capacity);
+        std::swap(v.arr, arr);
+    }
+
+    Vector&amp; operator=(Vector v) {
+        swap(v);
+        return *this;
+    }
+
+    template &lt;bool IsConst&gt;
+    class common_iterator {
+    private:
+        conditional_t&lt;IsConst, const T*, T*&gt; ptr;
+    public:
+        common_iterator(T* ptr): ptr(ptr) {}
+        conditional_t&lt;IsConst, const T&amp;, T&amp;&gt; operator*() {
+            return *ptr;
+        }
+        common_iterator&amp; operator++() {
+            ++ptr;
+            return *this;
+        }
+    };
+
+    using iterator = common_iterator&lt;false&gt;;
+    using const_iterator = common_iterator&lt;true&gt;;
+
+    iterator begin() const {
+        return iterator(arr);
+    }
+
+    iterator end() const {
+        return iterator(arr + capacity);
+    }
+
+    void print() {
+        for (size_t i = 0; i &lt; capacity; ++i) {
+            std::cout &lt;&lt; arr[i] &lt;&lt;  &quot; &quot;;
+        }
+        std::cout &lt;&lt; &quot;\n&quot;;
+    }
+};
+
+int main() {
+    Vector&lt;int&gt; v = {1, 2, 3, 4, 5};
+    Vector&lt;int&gt;::iterator it = v.begin();
+    v.print();
+    *it = 6;
+    v.print();
+}</code></pre>
+<h2 id="reverse-итераторы"><code class="language-cpp">reverse</code>
+итераторы</h2>
+<hr />
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+// в библиотеке итератор есть структура reverse_iterator,
+// которая от произвольного итератора создает итератор,
+// делающий все наоборот
+// вместо ++ --
+// вместо += -=
+
+// методы rbegin и rend есть у контейнеров и возвращают
+// итератор на последний элемент и итератор на элемент перед первым
+
+int main() {
+    std::vector&lt;int&gt; v = {1, 2, 3, 4, 5};
+
+    // auto ~ std::vector&lt;int&gt;::reverse_iterator
+    for (auto it = v.rbegin(); it != v.rend(); ++it) {
+        std::cout &lt;&lt; *it &lt;&lt; &quot;\n&quot;;
+    }
+}</code></pre>
+<h2 id="output-итераторы"><code class="language-cpp">output</code> итераторы</h2>
+<hr />
+<p>Я это напишу, ну, наверное.</p>
+<p><img src="img/back_insert_iterator.png" /></p>
+<h2 id="stream-итераторы"><code class="language-cpp">stream</code> итераторы <a
+href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a></h2>
+<hr />
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;iterator&gt;
+
+int main() {
+    std::istream_iterator&lt;int&gt; it(std::cin);
+    std::vector&lt;int&gt; v;
+
+    for (int i = 0; i &lt; 10; ++i, ++it) {
+        v.push_back(*it);
+    }
+
+    for (int x: v) { std::cout &lt;&lt; x &lt;&lt; &quot;\n&quot;; }
+}</code></pre>
+<h3 id="какие-бывают-потоки">Какие бывают потоки?</h3>
+<ul>
+<li><code class="language-cpp">std::ifstream = if('filename.txt')</code> - поток
+по файлу.</li>
+<li><code class="language-cpp">std::istringstream = iss(std::string("abra"))</code> - поток
+по строке</li>
+</ul>
+<p><img src="img/istream_iterator.png" /></p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;iterator&gt;
+
+int main() {
+    std::vector&lt;int&gt; v = {1, 2, 3, 4, 5};
+
+    std::cout &lt;&lt; &quot;[ &quot;;
+    std::copy(v.begin(), v.end(), std::ostream_iterator&lt;int&gt;(std::cout, &quot; ]\n[ &quot;));
+}</code></pre>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Если выучить стихотворение, то на вопрос: “какая строчка
+идет перед строкой: …?” - ответить сложно. Придется вспоминать все
+стихотворение сначала и до нужной строки.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Как метро.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Очевидно, что выражение должно быть проверяемо в момент
+компиляции.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Потоковые итераторы<a href="#fnref4"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+<script src="prism.js"></script>
+<script src="copy_code.js"></script>
+</body>
+</html>

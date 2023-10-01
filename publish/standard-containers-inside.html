@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2023-01-01" />
+  <meta name="keywords" content="лекции, мфти, мещерин, мещерин
+илья, тех, техать, 1 курс" />
+  <title>С++</title>
+  <link rel="stylesheet" href="styles.css">
+<link href="prism-monokai.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+<!--<link rel="stylesheet" type="text/css" href="https://jsxgraph.org/distrib/jsxgraph.css" />
+ <script type="text/javascript" src="https://jsxgraph.org/distrib/jsxgraphcore.js"></script>-->
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">С++</h1>
+<p class="date">2023</p>
+</header>
+<details>
+<summary>Содержание</summary>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#стандартные-контейнеры"
+id="toc-стандартные-контейнеры">Стандартные контейнеры</a>
+<ul>
+<li><a href="#обзор-стандартных-контейнеров"
+id="toc-обзор-стандартных-контейнеров">Обзор стандартных контейнеров</a>
+<ul>
+<li><a href="#последовательные-контейнеры-сложность-операций"
+id="toc-последовательные-контейнеры-сложность-операций">Последовательные
+контейнеры (сложность операций)</a></li>
+<li><a href="#ассоциативные-контейнеры"
+id="toc-ассоциативные-контейнеры">Ассоциативные контейнеры</a></li>
+</ul></li>
+<li><a href="#устройство-vector" id="toc-устройство-vector">Устройство
+<code class="language-cpp">vector</code></a></li>
+<li><a href="#устройство-vectorbool"
+id="toc-устройство-vectorbool">Устройство <code class="language-cpp">vector&lt;bool&gt;</code></a></li>
+<li><a href="#устройство-stddeque"
+id="toc-устройство-stddeque">Устройство <code class="language-cpp">std::deque</code></a></li>
+<li><a href="#устройство-stdstack-stdqueue-и-stdpriority_queue"
+id="toc-устройство-stdstack-stdqueue-и-stdpriority_queue">Устройство
+<code class="language-cpp">std::stack</code>, <code class="language-cpp">std::queue</code>
+и <code class="language-cpp">std::priority_queue</code></a>
+<ul>
+<li><a href="#stack" id="toc-stack"><code class="language-cpp">stack</code></a></li>
+<li><a href="#stdqueue"
+id="toc-stdqueue"><code>std::queue</code></a></li>
+<li><a href="#stdpriority_queue" id="toc-stdpriority_queue"><code class="language-cpp">std::priority_queue</code></a></li>
+</ul></li>
+<li><a href="#устройство-stdlist" id="toc-устройство-stdlist">Устройство
+<code class="language-cpp">std::list</code></a></li>
+<li><a href="#stdset-и-stdmap" id="toc-stdset-и-stdmap"><code class="language-cpp">std::set</code> и <code class="language-cpp">std::map</code></a></li>
+<li><a href="#stdunordered_map" id="toc-stdunordered_map"><code class="language-cpp">std::unordered_map</code></a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+<h1 id="стандартные-контейнеры">Стандартные контейнеры</h1>
+<hr />
+<h2 id="обзор-стандартных-контейнеров">Обзор стандартных
+контейнеров</h2>
+<hr />
+<p>Контейнеры делятся на две группы: последовательные (sequence) и
+ассоциативные (associate).</p>
+<h3 id="последовательные-контейнеры-сложность-операций">Последовательные
+контейнеры (сложность операций)</h3>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>контейнер</th>
+<th>описание</th>
+<th>индексация <code class="language-cpp">[]</code></th>
+<th><code class="language-cpp">push_back()</code> / <code class="language-cpp">push_front()</code></th>
+<th><code class="language-cpp">insert()</code> <a href="#fn1"
+class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></th>
+<th><code class="language-cpp">erase()</code></th>
+<th><code class="language-cpp">find()</code></th>
+<th><code class="language-cpp">iterator_category</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>vector</td>
+<td>динамический массив</td>
+<td>O(1)</td>
+<td>O(1) <a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a></td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>-</td>
+<td>RandomAccessIterator</td>
+</tr>
+<tr class="even">
+<td>deque <a href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a></td>
+<td>двусторонняя очередь</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>-</td>
+<td>RandomAccessIterator</td>
+</tr>
+<tr class="odd">
+<td>list</td>
+<td>двусвязный список</td>
+<td>-</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>-</td>
+<td>BidirectionalIterator</td>
+</tr>
+<tr class="even">
+<td>forward_list</td>
+<td>односвязный список</td>
+<td>-</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>-</td>
+<td>ForwardIterator</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ассоциативные-контейнеры">Ассоциативные контейнеры</h3>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>контейнер</th>
+<th>описание</th>
+<th>индексация <code class="language-cpp">[]</code></th>
+<th><code class="language-cpp">push_back()</code> / <code class="language-cpp">push_front()</code></th>
+<th><code class="language-cpp">insert()</code> <a href="#fn4"
+class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a></th>
+<th><code class="language-cpp">erase()</code></th>
+<th><code class="language-cpp">find()</code></th>
+<th><code class="language-cpp">iterator_category</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>set</td>
+<td>множество</td>
+<td>O(log(n)) <a href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a></td>
+<td>-</td>
+<td>O(log(n))</td>
+<td>O(log(n))</td>
+<td>O(log(n))</td>
+<td>BidirectionalIterator</td>
+</tr>
+<tr class="even">
+<td>map</td>
+<td>словарь</td>
+<td>O(log(n)) <a href="#fn6" class="footnote-ref" id="fnref6"
+role="doc-noteref"><sup>6</sup></a></td>
+<td>-</td>
+<td>O(log(n))</td>
+<td>O(log(n))</td>
+<td>O(log(n))</td>
+<td>BidirectionalIterator</td>
+</tr>
+<tr class="odd">
+<td>unordered_set</td>
+<td>неупорядоченное множество</td>
+<td>O(1) <a href="#fn7" class="footnote-ref" id="fnref7"
+role="doc-noteref"><sup>7</sup></a></td>
+<td>-</td>
+<td>O(1) <a href="#fn8" class="footnote-ref" id="fnref8"
+role="doc-noteref"><sup>8</sup></a></td>
+<td>O(1) <a href="#fn9" class="footnote-ref" id="fnref9"
+role="doc-noteref"><sup>9</sup></a></td>
+<td>O(1) <a href="#fn10" class="footnote-ref" id="fnref10"
+role="doc-noteref"><sup>10</sup></a></td>
+<td>ForwardIterator</td>
+</tr>
+<tr class="even">
+<td>unordered_map</td>
+<td>неупорядоченный словарь</td>
+<td>O(1) <a href="#fn11" class="footnote-ref" id="fnref11"
+role="doc-noteref"><sup>11</sup></a></td>
+<td>-</td>
+<td>O(1) <a href="#fn12" class="footnote-ref" id="fnref12"
+role="doc-noteref"><sup>12</sup></a></td>
+<td>O(1) <a href="#fn13" class="footnote-ref" id="fnref13"
+role="doc-noteref"><sup>13</sup></a></td>
+<td>O(1) <a href="#fn14" class="footnote-ref" id="fnref14"
+role="doc-noteref"><sup>14</sup></a></td>
+<td>ForwardIterator</td>
+</tr>
+</tbody>
+</table>
+<h2 id="устройство-vector">Устройство <code class="language-cpp">vector</code></h2>
+<hr />
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;iterator&gt;
+#include &lt;type_traits&gt;
+#include &lt;memory&gt;
+
+using std::initializer_list;
+
+template &lt;bool Cond, typename T, typename T_&gt;
+struct conditional {
+    using type = T_;
+};
+
+template &lt;typename T, typename T_&gt;
+struct conditional&lt;true, T, T_&gt; {
+    using type = T;
+};
+
+template &lt;bool Cond, typename T, typename T_&gt;
+using conditional_t = typename conditional&lt;Cond, T, T_&gt;::type;
+
+template &lt;typename T&gt;
+class Vector {
+private:
+    size_t cap = 0;
+    size_t sz = 0;
+    T* arr;
+public:
+    Vector(
+        size_t capacity, 
+        const T&amp; default_value = T()
+        ): cap(capacity), sz(capacity), arr(reinterpret_cast&lt;T*&gt;(new int8_t[cap * sizeof(T)])) {
+            for (size_t i = 0; i &lt; sz; ++i) {
+                arr[i] = default_value;
+            }
+    }
+    Vector(initializer_list&lt;T&gt; lst): cap(lst.size()), sz(lst.size()), arr(reinterpret_cast&lt;T*&gt;(new int8_t[cap * sizeof(T)])) {
+        std::copy(lst.begin(), lst.end(), arr);
+
+    }
+    ~Vector() {
+        delete[] arr;
+    }
+
+    void swap(Vector&amp; v) {
+        std::swap(v.sz, sz);
+        std::swap(v.arr, arr);
+    }
+
+    Vector&amp; operator=(Vector v) {
+        swap(v);
+        return *this;
+    }
+
+    size_t size() const {
+        return sz;
+    }
+
+    size_t capacity() const {
+        return cap;
+    }
+
+    void reserve(size_t size) {
+        if (size &lt;= cap) { return; }
+
+        // почему не new T[size]?
+        // потому что не хотим вызывать дефолтный конструктор у объекта:
+        // нужна только память под него
+        T* newarr = reinterpret_cast&lt;T*&gt;(new int8_t[size * sizeof(T)]);
+
+        // new(address) Object(); // позволяет вызвать конструктор Object() по адресу address
+
+        /*for (size_t i = 0; i &lt; sz; ++i) {
+            new(newarr + i) T(arr[i]); // новый синтаксис
+                                       // позволяет положить по адресу newarr + i
+                                       // скопированный из arr[i] объект
+                                       // вообще использовать конструктор копирования невыгодно
+                                       // и начиная с C++11 есть конструкция move
+                                       // но про нее будет отдельная большая тема */
+        // в коде выше существует еще проблема:
+        // при копировании объекта может быть брошено исключение
+        // и если это случилось, то нужно все вернуть как было
+        // для такой проверки существует функция std::uninitialized_copy
+        // https://en.cppreference.com/w/cpp/memory/uninitialized_copy
+
+        std::uninitialized_copy(arr, arr + sz, newarr);
+
+        for (size_t i = 0; i &lt; sz; ++i) {                                 
+            (arr + i)-&gt;~T(); // явно вызываем деструктор
+                             // потому что если написать delete[] arr
+                             // то будет вызван деструктор объекта, которого, возможно, нет  
+        }
+
+        // очищаем массив
+        delete[] reinterpret_cast&lt;int8_t*&gt;(arr);
+        cap = size;
+        arr = newarr;
+    }
+
+    void resize(size_t size, const T&amp; value = T()) {
+        reserve(size);
+        if (size &gt;= sz) {
+            for (size_t i = sz; i &lt; size; ++i) {
+                arr[i] = value;
+            }
+        } else {
+            for (size_t i = size; i &lt; sz; ++i) {
+                (arr + i)-&gt;~T();
+            }
+        }
+        sz = size;
+    }
+
+    void shrink_to_fit() {
+        resize(size);
+    }
+
+    Vector&amp; operator=(initializer_list&lt;T&gt; lst) {
+        reserve(lst.size());
+        std::copy(lst.begin(), lst.end(), arr);
+        sz = lst.size();
+        return *this;
+    }
+
+    T&amp; operator[](size_t index) {
+        return arr[index];
+    }
+
+    const T&amp; operator[](size_t index) const {
+        return arr[index];
+    }
+
+    T&amp; at(size_t index) {
+        if (index &gt;= sz) { throw std::out_of_range(&quot;List index out of range.&quot;); }
+        return arr[index];
+    }
+
+    const T&amp; at(size_t index) const {
+        if (index &gt;= sz) { throw std::out_of_range(&quot;List index out of range.&quot;); }
+        return arr[index];
+    }
+
+    void push_back(const T&amp; value) {
+        // sz += 1;
+        // reserve(sz);
+        // arr[sz - 1] = value;
+        if (sz == cap) { reserve(2 * sz); }
+        new(arr + sz) T(value);
+        ++sz;
+    }
+
+    void pop_back() {
+        (arr+sz)-&gt;~T();
+        --sz;
+    }
+
+    template &lt;bool IsConst&gt;
+    class common_iterator {
+    private:
+        conditional_t&lt;IsConst, const T*, T*&gt; ptr;
+    public:
+        common_iterator(T* ptr): ptr(ptr) {}
+        conditional_t&lt;IsConst, const T&amp;, T&amp;&gt; operator*() {
+            return *ptr;
+        }
+        common_iterator&amp; operator++() {
+            ++ptr;
+            return *this;
+        }
+    };
+
+    using iterator = common_iterator&lt;false&gt;;
+    using const_iterator = common_iterator&lt;true&gt;;
+
+    iterator begin() const {
+        return iterator(arr);
+    }
+
+    iterator end() const {
+        return iterator(arr + cap);
+    }
+
+    void print() {
+        for (size_t i = 0; i &lt; cap; ++i) {
+            std::cout &lt;&lt; arr[i] &lt;&lt;  &quot; &quot;;
+        }
+        std::cout &lt;&lt; &quot;\n&quot;;
+    }
+};
+
+int main() {
+    Vector&lt;int&gt; v(3);
+    v = {1, 2, 3, 4, 5};
+
+    v.push_back(90);
+
+    std::cout &lt;&lt; v[5] &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<p>Пока реализация на четверочку. Чтобы было совсем хорошо нужно
+использовать аллокаторы для выделения памяти и <code class="language-cpp">move</code> для перемещения объектов <a href="#fn15"
+class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a>.
+Но по этим темам будут отдельные пары.</p>
+<h2 id="устройство-vectorbool">Устройство <code class="language-cpp">vector&lt;bool&gt;</code></h2>
+<hr />
+<p>Вектор из <code class="language-cpp">bool</code> устроен не так как вектор из
+других типов, потому что не нужно хранить байт(один <code class="language-cpp">bool</code>) для каждого элемента вектора вектора.</p>
+<p>Какой тип у переменных вектора из булей?</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+template &lt;typename T&gt;
+void f(const T&amp;) = delete; // запретим вызов функции,
+                           // чтобы компилятор назвал тип переменной 
+
+int main() {
+    std::vector&lt;bool&gt; vb(7, true);
+    f(vb[5]); // хотим тип vb[5]
+}</code></pre>
+<p>Компилятор пишет, что тип переменной <code class="language-cpp">std::_Bit_reference</code>.</p>
+<p>Напишем реализацию вектора булей:</p>
+<pre class="language-cpp"><code class="language-cpp">template &lt;&gt;
+class Vector&lt;bool&gt; {
+private:
+    size_t sz;
+    size_t cap;
+    int8_t* arr;
+public:
+    Vector(size_t sz, bool default_value): sz(sz), cap(sz / 8 + ((sz % 8 != 0) ? 1 : 0)), arr(new int8_t[sz / 8 + ((sz % 8 != 0) ? 1 : 0)]) {
+        if (default_value) {
+            for (size_t i = 0; i &lt; cap; ++i) {
+                arr[i] |= 11111111u;
+            }
+        } else {
+            for (size_t i = 0; i &lt; cap; ++i) {
+                arr[i] &amp;= 0u;
+            }
+        }
+    }
+
+    ~Vector() {
+        delete[] arr;
+    }
+
+    struct BitReference {
+        int8_t* cell;
+        uint8_t pos;
+
+        BitReference(int8_t* cell, uint8_t pos): cell(cell), pos(pos) {}
+
+        operator bool() {
+            return *cell &amp; (1u &lt;&lt; pos);
+        }
+
+        BitReference&amp; operator=(bool value) {
+            if (value) {
+                *cell |= (1u &lt;&lt; pos);
+            } else {
+                *cell &amp;= ~(1u &lt;&lt; pos);
+            }
+            return *this;
+        }
+    };
+
+    BitReference operator[](size_t index) {
+        return BitReference(arr + index / 8, index % 8);
+    }
+
+    const BitReference operator[](size_t index) const {
+        return BitReference(arr + index / 8, index % 8);
+    }
+};
+
+int main() {
+    Vector&lt;bool&gt; v(7, true);
+
+    v[6] = false;
+
+    bool value = v[6];
+    if (value) {
+        std::cout &lt;&lt; &quot;true value\n&quot;;
+    } else {
+        std::cout &lt;&lt; &quot;false value\n&quot;;
+    }
+}</code></pre>
+<h2 id="устройство-stddeque">Устройство <code class="language-cpp">std::deque</code></h2>
+<hr />
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;deque&gt;
+
+int main() {
+    std::deque&lt;int&gt; d = {1, 2, 3, 4, 5};
+
+    std::cout &lt;&lt; d[0] &lt;&lt; &quot;\n&quot;;
+
+    d.push_back(9);
+    d.push_front(11);
+
+    std::cout &lt;&lt; d[0] &lt;&lt; &quot;\n&quot;;
+    std::cout &lt;&lt; d[6] &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<blockquote>
+<p>Я могу читать код <code class="language-cpp">stl</code>!!! 🎉🎉🎉🎉🎉</p>
+</blockquote>
+<blockquote>
+<p>Quite a bit of intelligence here. <a href="#fn16"
+class="footnote-ref" id="fnref16"
+role="doc-noteref"><sup>16</sup></a></p>
+</blockquote>
+<h2 id="устройство-stdstack-stdqueue-и-stdpriority_queue">Устройство
+<code class="language-cpp">std::stack</code>, <code class="language-cpp">std::queue</code>
+и <code class="language-cpp">std::priority_queue</code></h2>
+<hr />
+<h3 id="stack"><code class="language-cpp">stack</code></h3>
+<hr />
+<p>Стэк - это обертка над любым контейнером, поддерживающим методы <code class="language-cpp">push_back()</code>, <code class="language-cpp">back()</code> и <code class="language-cpp">pop_back()</code>.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;deque&gt;
+
+template &lt;typename T, typename Container = std::deque&lt;T&gt;&gt;
+class Stack {
+private:
+    Container c;
+public:
+    bool empty() const {
+        return c.empty();
+    }
+    
+    size_t size() const {
+        return c.size();
+    }
+      
+    T&amp; top() {
+        return c.back();
+    }
+    
+    const T&amp; top() const {
+        return c.back();
+    }
+
+    void push(const T&amp; __x) {
+        c.push_back(__x);
+    }
+
+    void pop() {
+        c.pop_back();
+    }
+};
+
+int main() {
+    Stack&lt;int&gt; s;
+    s.push(6);
+    std::cout &lt;&lt; s.top() &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<h3 id="stdqueue"><code>std::queue</code></h3>
+<p>Как стэк только вместо <code class="language-cpp">top()</code> метод <code class="language-cpp">front()</code> и <code class="language-cpp">pop()</code> делает <code class="language-cpp">pop_front()</code>.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;deque&gt;
+
+template &lt;typename T, typename Container = std::deque&lt;T&gt;&gt;
+class Queue {
+private:
+    Container c;
+public:
+    bool empty() const {
+        return c.empty();
+    }
+
+    size_t size() const {
+        return c.size();
+    }
+      
+    T&amp; front() {
+        return c.front();
+    }
+
+    const T&amp; front() const {
+        return c.front();
+    }
+
+    T&amp; back() {
+        return c.back();
+    }
+      
+    const T&amp; back() const {
+        return c.back();
+    }
+
+    void push(const T&amp; __x) {
+        c.push_back(__x);
+    }
+
+    void pop() {
+        c.pop_front();
+    }
+};
+
+int main() {
+    
+}</code></pre>
+<h3 id="stdpriority_queue"><code class="language-cpp">std::priority_queue</code></h3>
+<p>Почти как очередь. В шаблонные параметры добавлен компаратор <code class="language-cpp">comp</code> и после каждой вставки выполняется <code class="language-cpp">std::push_heap(c.begin(), c.end(), comp);</code>.</p>
+<h2 id="устройство-stdlist">Устройство <code class="language-cpp">std::list</code></h2>
+<hr />
+<p>Связный список.</p>
+<p><img src="img/list.png" /></p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+
+int main() {
+    
+}</code></pre>
+<h2 id="stdset-и-stdmap"><code class="language-cpp">std::set</code> и <code class="language-cpp">std::map</code></h2>
+<hr />
+<p>В <code class="language-cpp">std::map</code> ключи упорядочены.</p>
+<p><img src="img/map.png" /></p>
+<h2 id="stdunordered_map"><code class="language-cpp">std::unordered_map</code></h2>
+<hr />
+<p>Хэш-таблица на цепочках.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>От итератора и значения.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main() {
+    std::vector&lt;int&gt; v = {1, 2, 3, 4, 5};
+
+    std::cout &lt;&lt; v[0] &lt;&lt; &quot;\n&quot;;
+    v.insert(v.begin(), 8);
+    std::cout &lt;&lt; v[0] &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></li>
+<li id="fn2"><p>Амортизированная, т.к. требуется перевыделение памяти. У
+вектора нет метода <code class="language-cpp">push_front()</code><a
+href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Читается «дек»<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>От итератора и значения.</p>
+<pre class="language-cpp"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main() {
+    std::vector&lt;int&gt; v = {1, 2, 3, 4, 5};
+
+    std::cout &lt;&lt; v[0] &lt;&lt; &quot;\n&quot;;
+    v.insert(v.begin(), 8);
+    std::cout &lt;&lt; v[0] &lt;&lt; &quot;\n&quot;;
+}</code></pre>
+<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></li>
+<li id="fn5"><p>Красно-черное дерево.<a href="#fnref5"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Красно-черное дерево.<a href="#fnref6"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>В среднем.<a href="#fnref7" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>В среднем.<a href="#fnref8" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>В среднем.<a href="#fnref9" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>В среднем.<a href="#fnref10" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>В среднем.<a href="#fnref11" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p>В среднем.<a href="#fnref12" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p>В среднем.<a href="#fnref13" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn14"><p>В среднем.<a href="#fnref14" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn15"><p>Вместо использования конструктора копирования.<a
+href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn16"><p>Просто лучшие. Вы что гении?<a href="#fnref16"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+<script src="prism.js"></script>
+<script src="copy_code.js"></script>
+</body>
+</html>
